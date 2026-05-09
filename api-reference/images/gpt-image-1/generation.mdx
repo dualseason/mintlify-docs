@@ -1,0 +1,651 @@
+---
+title: "GPT-Image(1/1.5) 图像生成"
+description: "- 异步处理模式，返回任务ID用于后续查询"
+---
+
+- 支持文生图、图生图、局部重绘等多种生成模式
+- 支持透明背景、多种输出格式、多质量档位
+- 单次最多生成 4 张图片，参考图最多 15 张 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://XCompute.us/v1/images/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-image-1-official",
+      "prompt": "星空下的古老城堡",
+      "size": "1:1",
+      "quality": "auto",
+      "n": 1
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://XCompute.us/v1/images/generations"
+
+  payload = {
+      "model": "gpt-image-1-official",
+      "prompt": "星空下的古老城堡",
+      "size": "1:1",
+      "quality": "auto",
+      "n": 1
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://XCompute.us/v1/images/generations";
+
+  const payload = {
+    model: "gpt-image-1-official",
+    prompt: "星空下的古老城堡",
+    size: "1:1",
+    quality: "auto",
+    n: 1,
+  };
+
+  const headers = {
+    Authorization: "Bearer <token>",
+    "Content-Type": "application/json",
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload),
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error("Error:", error));
+  ```
+
+  ```go Go theme={null}
+  package main
+
+  import (
+      "bytes"
+      "encoding/json"
+      "fmt"
+      "io/ioutil"
+      "net/http"
+  )
+
+  func main() {
+      url := "https://XCompute.us/v1/images/generations"
+
+      payload := map[string]interface{}{
+          "model":   "gpt-image-1-official",
+          "prompt":  "星空下的古老城堡",
+          "size":    "1:1",
+          "quality": "auto",
+          "n":       1,
+      }
+
+      jsonData, _ := json.Marshal(payload)
+
+      req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+      req.Header.Set("Authorization", "Bearer <token>")
+      req.Header.Set("Content-Type", "application/json")
+
+      client := &http.Client{}
+      resp, err := client.Do(req)
+      if err != nil {
+          panic(err)
+      }
+      defer resp.Body.Close()
+
+      body, _ := ioutil.ReadAll(resp.Body)
+      fmt.Println(string(body))
+  }
+  ```
+
+  ```java Java theme={null}
+  import java.net.http.HttpClient;
+  import java.net.http.HttpRequest;
+  import java.net.http.HttpResponse;
+  import java.net.URI;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          String url = "https://XCompute.us/v1/images/generations";
+
+          String payload = """
+          {
+            "model": "gpt-image-1-official",
+            "prompt": "星空下的古老城堡",
+            "size": "1:1",
+            "quality": "auto",
+            "n": 1
+          }
+          """;
+
+          HttpClient client = HttpClient.newHttpClient();
+          HttpRequest request = HttpRequest.newBuilder()
+              .uri(URI.create(url))
+              .header("Authorization", "Bearer <token>")
+              .header("Content-Type", "application/json")
+              .POST(HttpRequest.BodyPublishers.ofString(payload))
+              .build();
+
+          HttpResponse<String> response = client.send(request,
+              HttpResponse.BodyHandlers.ofString());
+
+          System.out.println(response.body());
+      }
+  }
+  ```
+
+  ```php PHP theme={null}
+  <?php
+
+  $url = "https://XCompute.us/v1/images/generations";
+
+  $payload = [
+      "model" => "gpt-image-1-official",
+      "prompt" => "星空下的古老城堡",
+      "size" => "1:1",
+      "quality" => "auto",
+      "n" => 1
+  ];
+
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      "Authorization: Bearer <token>",
+      "Content-Type: application/json"
+  ]);
+
+  $response = curl_exec($ch);
+  curl_close($ch);
+
+  echo $response;
+  ?>
+  ```
+
+  ```ruby Ruby theme={null}
+  require 'net/http'
+  require 'json'
+  require 'uri'
+
+  url = URI("https://XCompute.us/v1/images/generations")
+
+  payload = {
+    model: "gpt-image-1-official",
+    prompt: "星空下的古老城堡",
+    size: "1:1",
+    quality: "auto",
+    n: 1
+  }
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+
+  request = Net::HTTP::Post.new(url)
+  request["Authorization"] = "Bearer <token>"
+  request["Content-Type"] = "application/json"
+  request.body = payload.to_json
+
+  response = http.request(request)
+  puts response.body
+  ```
+
+  ```swift Swift theme={null}
+  import Foundation
+
+  let url = URL(string: "https://XCompute.us/v1/images/generations")!
+
+  let payload: [String: Any] = [
+      "model": "gpt-image-1-official",
+      "prompt": "星空下的古老城堡",
+      "size": "1:1",
+      "quality": "auto",
+      "n": 1
+  ]
+
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  request.setValue("Bearer <token>", forHTTPHeaderField: "Authorization")
+  request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+  request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+
+  let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      if let error = error {
+          print("Error: \(error)")
+          return
+      }
+
+      if let data = data, let responseString = String(data: data, encoding: .utf8) {
+          print(responseString)
+      }
+  }
+
+  task.resume()
+  ```
+
+  ```csharp C# theme={null}
+  using System;
+  using System.Net.Http;
+  using System.Text;
+  using System.Threading.Tasks;
+
+  class Program
+  {
+      static async Task Main(string[] args)
+      {
+          var url = "https://XCompute.us/v1/images/generations";
+
+          var payload = @"{
+              ""model"": ""gpt-image-1-official"",
+              ""prompt"": ""星空下的古老城堡"",
+              ""size"": ""1:1"",
+              ""quality"": ""auto"",
+              ""n"": 1
+          }";
+
+          using var client = new HttpClient();
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer <token>");
+
+          var content = new StringContent(payload, Encoding.UTF8, "application/json");
+          var response = await client.PostAsync(url, content);
+          var result = await response.Content.ReadAsStringAsync();
+
+          Console.WriteLine(result);
+      }
+  }
+  ```
+
+  ```dart Dart theme={null}
+  import 'dart:convert';
+  import 'package:http/http.dart' as http;
+
+  void main() async {
+    final url = Uri.parse('https://XCompute.us/v1/images/generations');
+
+    final payload = {
+      'model': 'gpt-image-1-official',
+      'prompt': '星空下的古老城堡',
+      'size': '1:1',
+      'quality': 'auto',
+      'n': 1,
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer <token>',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(payload),
+    );
+
+    print(response.body);
+  }
+  ```
+
+  ```r R theme={null}
+  library(httr)
+  library(jsonlite)
+
+  url <- "https://XCompute.us/v1/images/generations"
+
+  payload <- list(
+    model = "gpt-image-1-official",
+    prompt = "星空下的古老城堡",
+    size = "1:1",
+    quality = "auto",
+    n = 1
+  )
+
+  response <- POST(
+    url,
+    add_headers(
+      Authorization = "Bearer <token>",
+      `Content-Type` = "application/json"
+    ),
+    body = toJSON(payload, auto_unbox = TRUE),
+    encode = "raw"
+  )
+
+  cat(content(response, "text"))
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": [
+      {
+        "status": "submitted",
+        "task_id": "task_01KXXXXXXXXXXXXXXX"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+
+  ```json 403 theme={null}
+  {
+    "error": {
+      "code": 403,
+      "message": "访问被禁止，您没有权限访问此资源",
+      "type": "permission_error"
+    }
+  }
+  ```
+
+  ```json 429 theme={null}
+  {
+    "error": {
+      "code": 429,
+      "message": "请求过于频繁，请稍后再试",
+      "type": "rate_limit_error"
+    }
+  }
+  ```
+
+  ```json 500 theme={null}
+  {
+    "error": {
+      "code": 500,
+      "message": "服务器内部错误，请稍后重试",
+      "type": "server_error"
+    }
+  }
+  ```
+
+  ```json 502 theme={null}
+  {
+    "error": {
+      "code": 502,
+      "message": "网关错误，服务器暂时不可用",
+      "type": "bad_gateway"
+    }
+  }
+  ```
+</ResponseExample>
+
+## 支持的模型
+
+| 模型名                      | 说明                 | 模式        | 图生图 | 最大张数 | 计费方式  |
+| ------------------------ | ------------------ | --------- | --- | ---- | ----- |
+| `gpt-image-1-official`   | 稳定优先，适合通用图片生成      | 文生图 / 图生图 | 支持  | 4 张  | 尺寸×质量 |
+| `gpt-image-1.5-official` | 新版本，适合更高质量和更复杂编辑场景 | 文生图 / 图生图 | 支持  | 4 张  | 尺寸×质量 |
+
+## Authorizations
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用Bearer Token进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://XCompute.us/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## Body
+
+<ParamField body="model" type="string" required>
+  模型名称
+
+  * `gpt-image-1-official` - 稳定优先，适合通用图片生成
+  * `gpt-image-1.5-official` - 新版本，适合更高质量和更复杂编辑场景
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  图像生成的文本描述，支持中英文
+</ParamField>
+
+<ParamField body="size" type="string" default="1:1">
+  画面比例
+
+  支持的比例：
+
+  * `1:1` - 正方形构图（默认）
+  * `3:2` - 横构图
+  * `2:3` - 竖构图
+</ParamField>
+
+<ParamField body="n" type="integer" default="1">
+  生成图片张数
+
+  取值范围：1-4
+
+  * 传入值 ≤ 0 时，系统按 `1` 处理
+  * 传入值 > 4 时，系统按 `4` 处理
+
+  **⚠️ 注意：** 必须输入纯数字（如 `1`），不要加引号，否则会报错
+</ParamField>
+
+<ParamField body="quality" type="string" default="auto">
+  图片质量
+
+  * `auto` - 自动选择质量（默认）
+  * `low` - 更快、更省
+  * `medium` - 质量与消耗折中
+  * `high` - 质量更高，消耗更高
+</ParamField>
+
+<ParamField body="background" type="string" default="auto">
+  背景模式
+
+  * `auto` - 自动背景（默认）
+  * `opaque` - 不透明背景
+  * `transparent` - 透明背景，推荐搭配 `png` 输出格式
+
+  <Warning>
+    `background: transparent` 不能和 `output_format: jpeg` 同时使用
+  </Warning>
+</ParamField>
+
+<ParamField body="moderation" type="string" default="auto">
+  审核强度
+
+  * `auto` - 默认审核强度
+  * `low` - 更宽松的审核强度
+</ParamField>
+
+<ParamField body="output_format" type="string" default="png">
+  输出格式
+
+  * `png` - 默认格式，适合透明背景
+  * `jpeg` - 文件更小，适合普通图片输出
+
+  <Warning>
+    `background: transparent` 不能和 `output_format: jpeg` 同时使用
+  </Warning>
+</ParamField>
+
+<ParamField body="output_compression" type="integer">
+  输出压缩强度，范围 0-100
+
+  * 建议仅在 `jpeg` 下使用
+  * `png` 场景建议不传
+</ParamField>
+
+<ParamField body="image_urls" type="array">
+  参考图像的 URL 数组，传入后自动按图生图处理
+
+  <Expandable title="详细说明">
+    * 传 1 张为单参考图编辑
+    * 传 2-15 张为多参考图融合编辑
+    * 超过 15 张服务端会拒绝处理
+    * 必须是公网可访问的稳定图片 URL
+  </Expandable>
+
+  **限制：** 最多 15 张参考图
+</ParamField>
+
+<ParamField body="mask_url" type="string">
+  遮罩图 URL，用于局部重绘（inpainting）
+
+  * 需搭配 `image_urls` 一起使用
+  * 传入后会按官方编辑接口一并提交
+
+  <Warning>
+    1、上传遮罩图前，请先确认图片 Alpha 通道为「是」。
+
+    2、遮罩图尺寸需与首张参考图一致。
+  </Warning>
+</ParamField>
+
+## 尺寸对照表
+
+对外统一使用比例值，系统内部自动映射到官方实际尺寸并完成计费。
+
+| 比例    | 实际尺寸      | 说明    |
+| ----- | --------- | ----- |
+| `1:1` | 1024×1024 | 正方形构图 |
+| `2:3` | 1024×1536 | 竖构图   |
+| `3:2` | 1536×1024 | 横构图   |
+
+## 使用场景示例
+
+**文生图（最简请求）**
+
+```json theme={null}
+{
+  "model": "gpt-image-1-official",
+  "prompt": "星空下的古老城堡"
+}
+```
+
+**文生图（完整参数）**
+
+```json theme={null}
+{
+  "model": "gpt-image-1-official",
+  "prompt": "A flat icon of a glass bottle with no background",
+  "size": "2:3",
+  "quality": "high",
+  "background": "transparent",
+  "moderation": "low",
+  "output_format": "png",
+  "n": 1
+}
+```
+
+**图生图（单参考图）**
+
+```json theme={null}
+{
+  "model": "gpt-image-1.5-official",
+  "prompt": "将参考图改成插画风格，保留主体轮廓",
+  "size": "1:1",
+  "quality": "auto",
+  "image_urls": [
+    "https://your-cdn.com/input.png"
+  ],
+  "n": 1
+}
+```
+
+**图生图（多参考图融合）**
+
+```json theme={null}
+{
+  "model": "gpt-image-1.5-official",
+  "prompt": "将两张参考图融合成一张插画海报，保留主体轮廓",
+  "size": "1:1",
+  "quality": "auto",
+  "background": "transparent",
+  "image_urls": [
+    "https://your-cdn.com/input-a.png",
+    "https://your-cdn.com/input-b.png"
+  ],
+  "moderation": "low",
+  "output_format": "png",
+  "n": 1
+}
+```
+
+**多张生成（n > 1）**
+
+```json theme={null}
+{
+  "model": "gpt-image-1-official",
+  "prompt": "Four minimalist poster variations of a red fox",
+  "size": "1:1",
+  "quality": "low",
+  "output_format": "png",
+  "n": 4
+}
+```
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  返回数据数组
+
+  <Expandable title="属性">
+    <ResponseField name="status" type="string">
+      任务状态
+
+      * `submitted` - 已提交
+    </ResponseField>
+
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 注意事项
+
+1. **异步处理**：提交后返回 `task_id`，需轮询 `/v1/tasks/{task_id}` 获取结果
+2. **模型选择**：通用图片生成优先使用 `gpt-image-1-official`，高质量编辑和复杂图生图建议使用 `gpt-image-1.5-official`
+3. **图片 URL 要求**：图生图推荐使用公网可直接访问的稳定图片 URL
+4. **计费规则**：按成功生成的图片张数计费，失败不扣费
+

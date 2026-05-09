@@ -1,0 +1,557 @@
+---
+title: "Wan2.7-VideoEdit 视频编辑"
+description: "- 阿里云万相 2.7 视频编辑模型"
+---
+
+- 基于已有视频进行 AI 编辑：风格迁移、内容替换、元素添加
+- 可选传入参考图辅助指定目标风格或外观
+- 支持保留原视频时长或自定义输出时长 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://XCompute.us/v1/videos/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "wan2.7-videoedit",
+      "video_urls": ["https://cdn.example.com/original.mp4"],
+      "prompt": "将背景替换为雪山场景",
+      "resolution": "1080P"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://XCompute.us/v1/videos/generations"
+
+  payload = {
+      "model": "wan2.7-videoedit",
+      "video_urls": ["https://cdn.example.com/original.mp4"],
+      "prompt": "将背景替换为雪山场景",
+      "resolution": "1080P"
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://XCompute.us/v1/videos/generations";
+
+  const payload = {
+    model: "wan2.7-videoedit",
+    video_urls: ["https://cdn.example.com/original.mp4"],
+    prompt: "将背景替换为雪山场景",
+    resolution: "1080P"
+  };
+
+  const headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "application/json"
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+  ```
+
+  ```go Go theme={null}
+  package main
+
+  import (
+      "bytes"
+      "encoding/json"
+      "fmt"
+      "io/ioutil"
+      "net/http"
+  )
+
+  func main() {
+      url := "https://XCompute.us/v1/videos/generations"
+
+      payload := map[string]interface{}{
+          "model":      "wan2.7-videoedit",
+          "video_urls": []string{"https://cdn.example.com/original.mp4"},
+          "prompt":     "将背景替换为雪山场景",
+          "resolution": "1080P",
+      }
+
+      jsonData, _ := json.Marshal(payload)
+
+      req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+      req.Header.Set("Authorization", "Bearer <token>")
+      req.Header.Set("Content-Type", "application/json")
+
+      client := &http.Client{}
+      resp, err := client.Do(req)
+      if err != nil {
+          panic(err)
+      }
+      defer resp.Body.Close()
+
+      body, _ := ioutil.ReadAll(resp.Body)
+      fmt.Println(string(body))
+  }
+  ```
+
+  ```java Java theme={null}
+  import java.net.http.HttpClient;
+  import java.net.http.HttpRequest;
+  import java.net.http.HttpResponse;
+  import java.net.URI;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          String url = "https://XCompute.us/v1/videos/generations";
+
+          String payload = """
+          {
+            "model": "wan2.7-videoedit",
+            "video_urls": ["https://cdn.example.com/original.mp4"],
+            "prompt": "将背景替换为雪山场景",
+            "resolution": "1080P"
+          }
+          """;
+
+          HttpClient client = HttpClient.newHttpClient();
+          HttpRequest request = HttpRequest.newBuilder()
+              .uri(URI.create(url))
+              .header("Authorization", "Bearer <token>")
+              .header("Content-Type", "application/json")
+              .POST(HttpRequest.BodyPublishers.ofString(payload))
+              .build();
+
+          HttpResponse<String> response = client.send(request,
+              HttpResponse.BodyHandlers.ofString());
+
+          System.out.println(response.body());
+      }
+  }
+  ```
+
+  ```php PHP theme={null}
+  <?php
+
+  $url = "https://XCompute.us/v1/videos/generations";
+
+  $payload = [
+      "model" => "wan2.7-videoedit",
+      "video_urls" => ["https://cdn.example.com/original.mp4"],
+      "prompt" => "将背景替换为雪山场景",
+      "resolution" => "1080P"
+  ];
+
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      "Authorization: Bearer <token>",
+      "Content-Type: application/json"
+  ]);
+
+  $response = curl_exec($ch);
+  curl_close($ch);
+
+  echo $response;
+  ?>
+  ```
+
+  ```ruby Ruby theme={null}
+  require 'net/http'
+  require 'json'
+  require 'uri'
+
+  url = URI("https://XCompute.us/v1/videos/generations")
+
+  payload = {
+    model: "wan2.7-videoedit",
+    video_urls: ["https://cdn.example.com/original.mp4"],
+    prompt: "将背景替换为雪山场景",
+    resolution: "1080P"
+  }
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+
+  request = Net::HTTP::Post.new(url)
+  request["Authorization"] = "Bearer <token>"
+  request["Content-Type"] = "application/json"
+  request.body = payload.to_json
+
+  response = http.request(request)
+  puts response.body
+  ```
+
+  ```swift Swift theme={null}
+  import Foundation
+
+  let url = URL(string: "https://XCompute.us/v1/videos/generations")!
+
+  let payload: [String: Any] = [
+      "model": "wan2.7-videoedit",
+      "video_urls": ["https://cdn.example.com/original.mp4"],
+      "prompt": "将背景替换为雪山场景",
+      "resolution": "1080P"
+  ]
+
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  request.setValue("Bearer <token>", forHTTPHeaderField: "Authorization")
+  request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+  request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+
+  let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      if let error = error {
+          print("Error: \(error)")
+          return
+      }
+
+      if let data = data, let responseString = String(data: data, encoding: .utf8) {
+          print(responseString)
+      }
+  }
+
+  task.resume()
+  ```
+
+  ```csharp C# theme={null}
+  using System;
+  using System.Net.Http;
+  using System.Text;
+  using System.Threading.Tasks;
+
+  class Program
+  {
+      static async Task Main(string[] args)
+      {
+          var url = "https://XCompute.us/v1/videos/generations";
+
+          var payload = @"{
+              ""model"": ""wan2.7-videoedit"",
+              ""video_urls"": [""https://cdn.example.com/original.mp4""],
+              ""prompt"": ""将背景替换为雪山场景"",
+              ""resolution"": ""1080P""
+          }";
+
+          using var client = new HttpClient();
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer <token>");
+
+          var content = new StringContent(payload, Encoding.UTF8, "application/json");
+          var response = await client.PostAsync(url, content);
+          var result = await response.Content.ReadAsStringAsync();
+
+          Console.WriteLine(result);
+      }
+  }
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": [
+      {
+        "status": "submitted",
+        "task_id": "task_01J9HA7JPQ9A0Z6JZ3V8M9W6PZ"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+
+  ```json 429 theme={null}
+  {
+    "error": {
+      "code": 429,
+      "message": "请求过于频繁，请稍后再试",
+      "type": "rate_limit_error"
+    }
+  }
+  ```
+
+  ```json 500 theme={null}
+  {
+    "error": {
+      "code": 500,
+      "message": "服务器内部错误，请稍后重试",
+      "type": "server_error"
+    }
+  }
+  ```
+</ResponseExample>
+
+## 认证
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用 Bearer Token 进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://XCompute.us/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## 请求参数
+
+<ParamField body="model" type="string" required>
+  视频生成模型名称，固定为 `wan2.7-videoedit`
+</ParamField>
+
+<ParamField body="video_urls" type="array<string>" required>
+  待编辑的原始视频 URL 数组
+
+  <Warning>
+    **只取第 1 个视频**
+  </Warning>
+
+  <Note>
+    **视频限制：**
+
+    * 格式：mp4、mov
+    * 时长：2～10s
+    * 分辨率：宽度和高度范围为 \[240, 4096] 像素
+    * 宽高比：1:8 \~ 8:1
+    * 文件大小：不超过 100MB
+  </Note>
+</ParamField>
+
+<ParamField body="prompt" type="string">
+  编辑指令，描述希望对视频做什么改变，最多 5000 字符
+
+  <Note>
+    不传时模型将进行默认的风格迁移
+  </Note>
+
+  示例：`"将人物的服装改为红色礼服"`、`"将背景替换为雪山场景"`
+</ParamField>
+
+<ParamField body="negative_prompt" type="string">
+  反向提示词，描述不希望出现的内容，最多 500 字符
+</ParamField>
+
+<ParamField body="image_urls" type="array<string>">
+  参考图片 URL 数组，最多 4 张
+
+  用于指定目标风格或外观（如风格迁移的目标样式参考）
+</ParamField>
+
+<ParamField body="resolution" type="string" default="1080P">
+  输出视频分辨率
+
+  可选值：
+
+  * `720P` - 标清
+  * `1080P` - 高清（默认）
+</ParamField>
+
+<ParamField body="duration" type="integer" default="0">
+  输出视频时长（秒）
+
+  * `0`（默认）：保留原视频完整时长
+  * `2-10` 的整数：从头截取指定时长
+
+  <Note>
+    当 `duration=0` 时，以输出视频实际时长计费
+
+    指定时长不能超过 `video_urls` 原始视频的时长
+  </Note>
+</ParamField>
+
+<ParamField body="size" type="string">
+  输出画面宽高比
+
+  支持的格式：
+
+  * `16:9` - 横版宽屏
+  * `9:16` - 竖版长屏
+  * `1:1` - 正方形
+  * `4:3` - 横版
+  * `3:4` - 竖版
+
+  <Note>
+    不传则与输入视频宽高比保持一致
+  </Note>
+</ParamField>
+
+<ParamField body="prompt_extend" type="boolean" default="true">
+  是否开启 prompt 智能改写
+
+  对较短提示词效果提升明显，但会增加耗时
+
+  默认值：`true`
+</ParamField>
+
+<ParamField body="watermark" type="boolean" default="false">
+  是否在生成的视频上添加 "AI生成" 水印
+
+  * `true`：添加水印
+  * `false`：不添加水印（默认）
+</ParamField>
+
+<ParamField body="seed" type="integer">
+  种子整数，用于控制生成内容的随机性
+
+  取值范围：`≥0` 的整数
+
+  <Note>
+    * 相同的请求下，模型收到不同的 seed 值（如：不指定 seed 值），将生成不同的结果
+    * 相同的请求下，模型收到相同的 seed 值，会生成类似的结果，但不保证完全一致
+  </Note>
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  附加参数对象
+
+  <Expandable title="metadata 字段">
+    <ParamField body="audio_setting" type="string" default="auto">
+      音频处理方式：
+
+      * `auto`（默认）：AI 根据编辑后的视频内容自动重新生成匹配音频
+      * `origin`：强制保留原视频音频，适合有重要背景音/对话的视频
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，成功时为 200
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  返回数据数组
+
+  <Expandable title="数组元素">
+    <ResponseField name="status" type="string">
+      任务状态，初始提交时为 `submitted`
+    </ResponseField>
+
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 使用场景
+
+### 场景 1：基础视频编辑（最简）
+
+```json theme={null}
+{
+  "model": "wan2.7-videoedit",
+  "video_urls": ["https://cdn.example.com/original.mp4"],
+  "prompt": "将背景替换为雪山场景"
+}
+```
+
+### 场景 2：风格迁移（带参考图）
+
+```json theme={null}
+{
+  "model": "wan2.7-videoedit",
+  "prompt": "将视频风格迁移为参考图的动漫风格",
+  "video_urls": ["https://cdn.example.com/original.mp4"],
+  "image_urls": [
+    "https://cdn.example.com/anime_style.jpg"
+  ],
+  "resolution": "1080P",
+  "watermark": false
+}
+```
+
+### 场景 3：保留原视频音频
+
+适合有重要背景音或人物对话的视频：
+
+```json theme={null}
+{
+  "model": "wan2.7-videoedit",
+  "video_urls": ["https://cdn.example.com/speech.mp4"],
+  "prompt": "将背景替换为山间小路",
+  "metadata": { "audio_setting": "origin" }
+}
+```
+
+### 场景 4：完整参数
+
+```json theme={null}
+{
+  "model": "wan2.7-videoedit",
+  "prompt": "将人物的服装改为红色礼服",
+  "negative_prompt": "模糊、失真",
+  "video_urls": ["https://cdn.example.com/original.mp4"],
+  "image_urls": ["https://cdn.example.com/reference.jpg"],
+  "resolution": "1080P",
+  "duration": 0,
+  "size": "16:9",
+  "prompt_extend": true,
+  "watermark": false,
+  "seed": 888,
+  "metadata": {
+    "audio_setting": "origin"
+  }
+}
+```
+
+## 音频处理说明
+
+| audio\_setting | 说明                    | 适用场景              |
+| -------------- | --------------------- | ----------------- |
+| `auto`（默认）     | AI 根据编辑后的视频内容重新生成匹配音频 | 视觉风格大幅改变，希望音频同步更新 |
+| `origin`       | 强制保留原视频音轨             | 有重要背景音乐、人物对话的视频   |
+
+<Note>
+  **查询任务结果**
+
+  视频生成为异步任务，提交后会返回 `task_id`。使用 [获取任务状态](/api-reference/tasks/status) 接口查询生成进度和结果。
+</Note>
+

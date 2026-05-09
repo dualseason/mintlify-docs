@@ -1,72 +1,182 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "XCompute",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#2563EB",
+    "light": "#3B82F6",
+    "dark": "#1D4ED8"
   },
   "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "控制台",
+        "href": "https://XCompute.us/console"
+      },
+      {
+        "label": "在线调试",
+        "href": "https://jvzcscqk7u.apifox.cn"
+      },
+      {
+        "label": "模型定价",
+        "href": "https://XCompute.us/pricing"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "获取 API Key",
+      "href": "https://XCompute.us/console/token"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "概览",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "开始使用",
             "pages": [
               "index",
               "quickstart",
               "development"
             ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/components",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "Agent ready",
-            "pages": [
-              "agent-ready/prompt",
-              "agent-ready/visibility",
-              "agent-ready/contextual",
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "API 参考",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "概览",
             "pages": [
               "api-reference/introduction"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "文本",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/texts/general/chat-completions",
+              "api-reference/texts/general/chat-completions-nostream",
+              "api-reference/texts/general/claude-messages",
+              "api-reference/texts/openai/responses",
+              "api-reference/texts/gemini/quickstart"
+            ]
+          },
+          {
+            "group": "图像",
+            "pages": [
+              "api-reference/images/gpt-image-1/generation",
+              "api-reference/images/gpt-image-2/generation",
+              "api-reference/images/gpt-image-2/official",
+              "api-reference/images/gemini-2.5-flash/generation",
+              "api-reference/images/gemini-3-pro/generation",
+              "api-reference/images/gemini-3.1-flash/generation",
+              "api-reference/images/grok-imagine/generation",
+              "api-reference/images/grok-imagine/edit",
+              "api-reference/images/imagen-4.0-apimart/generation",
+              "api-reference/images/qwen-image/generation",
+              "api-reference/images/seedream-4/generation",
+              "api-reference/images/seedream-4.5/generation",
+              "api-reference/images/seedream-5-lite/generation",
+              "api-reference/images/wan2.7-image/generation",
+              "api-reference/images/z-image-turbo/generation"
+            ]
+          },
+          {
+            "group": "视频",
+            "pages": [
+              "api-reference/videos/veo3/generation",
+              "api-reference/videos/veo3/generation-official",
+              "api-reference/videos/veo3/remix",
+              "api-reference/videos/sora-2/generation-preview",
+              "api-reference/videos/skyreels-v4/generation",
+              "api-reference/videos/kling-v2-6/generation",
+              "api-reference/videos/kling-v3/generation",
+              "api-reference/videos/kling-v3-omni/generation",
+              "api-reference/videos/kling-video-o1/generation",
+              "api-reference/videos/grok-imagine/generation",
+              "api-reference/videos/doubao/generation",
+              "api-reference/videos/doubao-seedance-1-5-pro/generation",
+              "api-reference/videos/doubao-seedance-2-0/generation",
+              "api-reference/videos/minimax-hailuo/generation",
+              "api-reference/videos/minimax-hailuo-2.3/generation",
+              "api-reference/videos/vidu-q3/generation",
+              "api-reference/videos/vidu-q3-pro/generation",
+              "api-reference/videos/wan2.5/generation",
+              "api-reference/videos/wan2.6/generation",
+              "api-reference/videos/wan2.6/i2v-flash-generation",
+              "api-reference/videos/wan2.7/generation",
+              "api-reference/videos/wan2.7-r2v/generation",
+              "api-reference/videos/wan2.7-videoedit/generation"
+            ]
+          },
+          {
+            "group": "音频",
+            "pages": [
+              "api-reference/audios/tts",
+              "api-reference/audios/whisper-1"
+            ]
+          },
+          {
+            "group": "账户与工具",
+            "pages": [
+              "api-reference/account/token-balance",
+              "api-reference/account/user-balance",
+              "api-reference/tasks/status",
+              "api-reference/uploads/images"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "集成",
+        "groups": [
+          {
+            "group": "聊天工具",
+            "pages": [
+              "integrations/chat/anythingllm",
+              "integrations/chat/chatbox",
+              "integrations/chat/cherry-studio"
+            ]
+          },
+          {
+            "group": "开发工具",
+            "pages": [
+              "integrations/dev-tool/claude-code",
+              "integrations/dev-tool/cline",
+              "integrations/dev-tool/cursor",
+              "integrations/dev-tool/gemini"
+            ]
+          },
+          {
+            "group": "平台",
+            "pages": [
+              "integrations/platform/dify",
+              "integrations/platform/immersive-translate",
+              "integrations/platform/openclaw-manager",
+              "integrations/platform/openclaw-manager-feishu",
+              "integrations/platform/openclaw-manager-telegram"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "FAQ",
+        "groups": [
+          {
+            "group": "常见问题",
+            "pages": [
+              "faqs",
+              "faqs/connection-usage",
+              "faqs/account-management",
+              "faqs/security-configuration",
+              "faqs/features",
+              "faqs/cost-optimization"
             ]
           }
         ]
@@ -75,52 +185,37 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "控制台",
+          "href": "https://XCompute.us/console",
+          "icon": "house"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "API Keys",
+          "href": "https://XCompute.us/console/token",
+          "icon": "key"
+        },
+        {
+          "anchor": "模型定价",
+          "href": "https://XCompute.us/pricing",
+          "icon": "dollar-sign"
         }
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://XCompute.us"
     }
   }
 }

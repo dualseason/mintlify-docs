@@ -1,0 +1,274 @@
+---
+title: "Qwen Image 2.0 图像生成"
+description: "- 异步处理模式，返回任务ID用于后续查询"
+---
+
+- 支持文生图、图生图等多种生成模式
+- 支持 1K/2K 分辨率档位，最多生成 6 张图片 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://XCompute.us/v1/images/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "qwen-image-2.0",
+      "prompt": "一只可爱的橘猫在阳光下打瞌睡"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://XCompute.us/v1/images/generations"
+
+  payload = {
+      "model": "qwen-image-2.0",
+      "prompt": "一只可爱的橘猫在阳光下打瞌睡"
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://XCompute.us/v1/images/generations";
+
+  const payload = {
+    model: "qwen-image-2.0",
+    prompt: "一只可爱的橘猫在阳光下打瞌睡",
+  };
+
+  const headers = {
+    Authorization: "Bearer <token>",
+    "Content-Type": "application/json",
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload),
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error("Error:", error));
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": [
+      {
+        "status": "submitted",
+        "task_id": "task_01JGXYZ1234567890ABCDEF"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+</ResponseExample>
+
+## 支持的模型
+
+| 模型名                  | 说明                   | 最大张数 | 计费方式 |
+| -------------------- | -------------------- | ---- | ---- |
+| `qwen-image-2.0`     | 标准版，效果与性能平衡          | 6 张  | 固定价格 |
+| `qwen-image-2.0-pro` | Pro 版，文字渲染更强、写实质感更细腻 | 6 张  | 固定价格 |
+
+## Authorizations
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用Bearer Token进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://XCompute.us/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## Body
+
+<ParamField body="model" type="string" required>
+  模型名称
+
+  * `qwen-image-2.0` - 标准版，效果与性能平衡
+  * `qwen-image-2.0-pro` - Pro 版，文字渲染更强、写实质感更细腻
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  图像生成的文本描述，最多 800 字符
+</ParamField>
+
+<ParamField body="size" type="string" default="1:1">
+  图像宽高比
+
+  支持的宽高比：
+
+  * `1:1` - 正方形（默认）
+  * `4:3` - 横向 4:3
+  * `3:4` - 纵向 3:4
+  * `16:9` - 横向宽屏
+  * `9:16` - 纵向竖屏
+  * `3:2` - 横向 3:2
+  * `2:3` - 纵向 2:3
+</ParamField>
+
+<ParamField body="resolution" type="string" default="1K">
+  分辨率档位
+
+  * `1K` - 标准分辨率（默认）
+  * `2K` - 高清分辨率
+</ParamField>
+
+<ParamField body="n" type="integer" default="1">
+  生成图片张数
+
+  取值范围：1-6
+</ParamField>
+
+<ParamField body="negative_prompt" type="string">
+  反向提示词（不希望出现的内容），最多 500 字符
+</ParamField>
+
+<ParamField body="image_urls" type="array">
+  参考图片 URL 数组（图生图模式）
+
+  **限制：**
+
+  * 必须是公网可访问的 URL
+  * 不支持 base64 格式
+</ParamField>
+
+## 尺寸对照表
+
+通过 `size`（比例）+ `resolution`（分辨率档位）组合控制输出尺寸。
+
+| 比例     | 1K 档位     | 2K 档位     |
+| ------ | --------- | --------- |
+| `1:1`  | 1024×1024 | 2048×2048 |
+| `4:3`  | 1152×864  | 2048×1536 |
+| `3:4`  | 864×1152  | 1536×2048 |
+| `16:9` | 1280×720  | 2048×1152 |
+| `9:16` | 720×1280  | 1152×2048 |
+| `3:2`  | 1248×832  | 2048×1360 |
+| `2:3`  | 832×1248  | 1360×2048 |
+
+* 只传 `size` → 默认 1K 档位：`{"size": "16:9"}` → 1280×720
+* 传 `size` + `resolution` → 指定档位：`{"size": "16:9", "resolution": "2K"}` → 2048×1152
+
+## 使用场景示例
+
+**文生图（最简请求）**
+
+```json theme={null}
+{
+  "model": "qwen-image-2.0",
+  "prompt": "一只可爱的橘猫在阳光下打瞌睡"
+}
+```
+
+**指定比例和张数**
+
+```json theme={null}
+{
+  "model": "qwen-image-2.0-pro",
+  "prompt": "赛博朋克风格的未来城市夜景，霓虹灯闪烁",
+  "size": "16:9",
+  "n": 4
+}
+```
+
+**高清 2K 档位**
+
+```json theme={null}
+{
+  "model": "qwen-image-2.0-pro",
+  "prompt": "精致的美食摄影，寿司拼盘",
+  "size": "4:3",
+  "resolution": "2K",
+  "n": 2
+}
+```
+
+**图生图（参考图 + 文字描述）**
+
+```json theme={null}
+{
+  "model": "qwen-image-2.0",
+  "prompt": "把背景改成海边日落",
+  "image_urls": ["https://example.com/my-photo.jpg"]
+}
+```
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  返回数据数组
+
+  <Expandable title="属性">
+    <ResponseField name="status" type="string">
+      任务状态
+
+      * `submitted` - 已提交
+    </ResponseField>
+
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 注意事项
+
+1. **异步处理**：提交后返回 `task_id`，需轮询 `/v1/tasks/{task_id}` 获取结果
+2. **图片存储**：生成的图片已镜像到平台 CDN，长期有效
+3. **计费规则**：按成功生成的图片张数计费，失败不扣费
+4. **图片 URL 要求**：输入图片必须是公网可访问的 URL，不支持 base64
+

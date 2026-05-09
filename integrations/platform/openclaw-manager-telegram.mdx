@@ -1,0 +1,158 @@
+---
+title: "OpenClaw Manager — Telegram 渠道配置"
+description: "详细指导如何在 OpenClaw Manager 中创建和配置 Telegram 机器人，包括 BotFather 创建 Bot、填写凭证、对接码绑定等完整流程。"
+---
+
+## 简介
+
+本教程将指导您在 OpenClaw Manager 中完成 Telegram 机器人的创建和配置。完成后，您的 Telegram Bot 将接入 XCompute 的 AI 模型，可以与用户进行智能对话。
+
+<Note>**前置条件：** 请确保您已完成 [OpenClaw Manager 部署](/integrations/platform/openclaw-manager)，Manager 正在运行且可以访问管理界面。</Note>
+
+## 第一步：在 Telegram 创建 Bot
+
+1. 打开 Telegram，搜索 [@BotFather](https://t.me/BotFather) 并进入对话
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/botfather-search.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=63320eeb5130eaea975495553576c905" alt="搜索 BotFather" width="1221" height="948" data-path="images/integrations/openclaw-manager/telegram/botfather-search.png" />
+</Frame>
+
+2. 发送 `/newbot` 命令
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/botfather-newbot.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=9daa1fab7fd6d89ff6203a9c032a92fc" alt="发送 /newbot 命令" width="765" height="924" data-path="images/integrations/openclaw-manager/telegram/botfather-newbot.png" />
+</Frame>
+
+<caption>*发送 /newbot 命令开始创建机器人*</caption>
+
+3. 按照提示输入机器人的 **显示名称**（如 `My AI Bot`）
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/botfather-name.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=30e7eb7dc08b8167c3a540e5b3366f68" alt="输入机器人名称" width="779" height="299" data-path="images/integrations/openclaw-manager/telegram/botfather-name.png" />
+</Frame>
+
+<caption>*输入机器人的显示名称*</caption>
+
+4. 输入机器人的 **用户名**（必须以 `bot` 结尾，如 `my_ai_chatbot`）
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/botfather-username.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=0d3208d3298c945b43514ddf7b7a3386" alt="输入机器人用户名" width="760" height="444" data-path="images/integrations/openclaw-manager/telegram/botfather-username.png" />
+</Frame>
+
+<caption>*输入机器人的用户名（必须以 bot 结尾）*</caption>
+
+5. BotFather 会返回一个 **Bot Token**（格式：`123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`），复制保存
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/botfather-token.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=a067ecf50bdccdf6d89775cf9b54fa20" alt="获取 Bot Token" width="777" height="938" data-path="images/integrations/openclaw-manager/telegram/botfather-token.png" />
+</Frame>
+
+<caption>*BotFather 返回的 Bot Token*</caption>
+
+<Warning>**请妥善保管 Bot Token**，不要泄露给他人。如果 Token 泄露，请在 BotFather 中使用 `/revoke` 命令重新生成。</Warning>
+
+## 第二步：在 Manager 中创建实例
+
+1. 打开 OpenClaw Manager 管理界面（`http://127.0.0.1:51942`）
+
+2. 点击 **+ 新建实例**
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/manager/new-instance.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=f8ce08b7a5ff98c4ec954b4eeae5a9a5" alt="新建实例" width="1911" height="948" data-path="images/integrations/openclaw-manager/manager/new-instance.png" />
+</Frame>
+
+3. **输入实例名称** — 如 `my-telegram-bot`（仅支持英文字母、数字、下划线、连字符）
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/manager/step-name.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=940ab7cfe9efde5fd476f43cc7904074" alt="输入实例名称" width="1911" height="948" data-path="images/integrations/openclaw-manager/manager/step-name.png" />
+</Frame>
+
+4. **选择 AI 模型** — 选择您要使用的模型
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/manager/step-model.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=e8b31807c426206f159b2a95ed0a1756" alt="选择模型" width="1905" height="860" data-path="images/integrations/openclaw-manager/manager/step-model.png" />
+</Frame>
+
+5. **输入 XCompute API Key** — 输入以 `sk-` 开头的 API 密钥
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/manager/step-key.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=c207dcef21d61de89ed41bc130f889c6" alt="输入 API Key" width="1905" height="948" data-path="images/integrations/openclaw-manager/manager/step-key.png" />
+</Frame>
+
+6. **选择渠道** — 选择 **Telegram**
+
+7. **粘贴 Bot Token** — 将第一步获取的 Bot Token 粘贴到输入框中
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/step-channel.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=18fc367a8d7a3e8e92711cff675f10a1" alt="配置 Telegram 渠道" width="1896" height="941" data-path="images/integrations/openclaw-manager/telegram/step-channel.png" />
+</Frame>
+
+<caption>*粘贴 Telegram Bot Token*</caption>
+
+7. 点击 **创建** 完成实例创建
+
+## 第三步：对接码绑定
+
+实例创建并启动后，需要通过对接码完成用户授权：
+
+1. 在 Telegram 中搜索您刚创建的机器人用户名
+
+2. 发送任意消息（如「你好」）
+
+3. 机器人会回复一个 **8 位对接码**（如 `DFE62DTD`）
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/pairing-code.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=413c78497a42b87e83fcd8bea0749bd9" alt="获取对接码" width="425" height="327" data-path="images/integrations/openclaw-manager/telegram/pairing-code.png" />
+</Frame>
+
+<caption>*机器人回复的对接码*</caption>
+
+4. 回到 Manager 的新建实例向导，在「**填入对接码**」步骤中输入对接码，点击「**批准**」
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/pairing-input.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=7df57e6d48c00d2394d8f3edb7cc664c" alt="输入对接码" width="3072" height="3072" data-path="images/integrations/openclaw-manager/telegram/pairing-input.png" />
+</Frame>
+
+<caption>*在新建实例向导中输入对接码并批准*</caption>
+
+5. 显示对接码已批准后，点击「**完成**」
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/pairing-success.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=b2f6f2219d2a09de769e388405c631db" alt="对接码审批成功" width="1902" height="942" data-path="images/integrations/openclaw-manager/telegram/pairing-success.png" />
+</Frame>
+
+<caption>*对接码审批成功，点击完成*</caption>
+
+6. 返回 Telegram，再次发送消息，机器人将正常回复 AI 生成的内容
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/LGVVJQGJwbbJu2RM/images/integrations/openclaw-manager/telegram/chat-demo.png?fit=max&auto=format&n=LGVVJQGJwbbJu2RM&q=85&s=8eac46495a03d90820377d27b70c9fc8" alt="与机器人对话" width="774" height="915" data-path="images/integrations/openclaw-manager/telegram/chat-demo.png" />
+</Frame>
+
+<caption>*绑定成功后与 AI 机器人正常对话*</caption>
+
+<Note>**提示：** 对接码存储在 Gateway 内存中，Gateway 重启后失效。如果对接码过期，让用户重新发消息即可获取新的对接码。</Note>
+
+## 常见问题
+
+### Q1: 机器人创建成功但不回复消息？
+
+**解决方案：**
+
+1. 确认 Manager 中该实例状态为「**运行中**」
+2. 确认 Bot Token 填写正确
+3. 检查 Gateway 日志：`~/.openclaw-<实例名>/logs/gateway.log`
+
+### Q2: 对接码审批失败？
+
+**解决方案：**
+
+* 确认 Gateway 正在运行
+* 对接码区分大小写，请仔细核对
+* 对接码在 Gateway 重启后失效，让用户重新发消息获取新码
+
+***
+
+<Card title="返回 OpenClaw Manager 部署教程" icon="arrow-left" href="/integrations/platform/openclaw-manager">
+  查看 Manager 安装部署和实例管理的完整指南
+</Card>

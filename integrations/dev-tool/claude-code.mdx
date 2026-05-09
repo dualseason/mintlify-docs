@@ -1,0 +1,360 @@
+---
+title: "在 Claude Code 中使用 XCompute"
+description: "详细指导如何在 Claude Code CLI 中配置和使用 XCompute API 服务，通过简单的配置即可在终端中调用多种 AI 模型进行辅助编程。"
+---
+
+<Frame>
+  <img src="https://mintcdn.com/apicore/_4UKBib4iqrgK4Ws/images/integrations/claude-code/claude-code-cli.png?fit=max&auto=format&n=_4UKBib4iqrgK4Ws&q=85&s=219739f4029aa915b90253ad02b01437" alt="Claude Code 主界面" width="2574" height="360" data-path="images/integrations/claude-code/claude-code-cli.png" />
+</Frame>
+
+## 准备工作
+
+Claude Code 是 Anthropic 推出的命令行 AI 编程助手，支持在终端中直接与 AI 对话、生成代码、调试问题等。
+通过接入 XCompute，您可以在 Claude Code 中使用包括 GPT、Claude、Gemini 在内的多种模型。
+
+在开始之前，请确保：
+
+1. **已获取 XCompute API 密钥**
+   登录 [XCompute 控制台](https://XCompute.us/console/token) 获取您的 API 密钥（以 `sk-` 开头）
+
+<Note>**提示：** 如果还没有 XCompute 账户，请先在 [XCompute](https://XCompute.us/console) 注册并获取 API 密钥。</Note>
+
+## 第一步：安装 Claude Code
+
+选择以下任一方式安装：
+
+<Tabs>
+  <Tab title="macOS / Linux（推荐）">
+    使用官方脚本一键安装：
+
+    ```bash theme={null}
+    curl -fsSL https://claude.ai/install.sh | bash
+    ```
+
+    也可以通过 Homebrew 安装：
+
+    ```bash theme={null}
+    brew install --cask claude-code
+    ```
+
+    <Note>如果遇到权限问题，请在命令前加 `sudo`。</Note>
+  </Tab>
+
+  <Tab title="Windows">
+    **PowerShell：**
+
+    ```powershell theme={null}
+    irm https://claude.ai/install.ps1 | iex
+    ```
+
+    **CMD：**
+
+    ```cmd theme={null}
+    curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+    ```
+  </Tab>
+
+  <Tab title="NPM 安装">
+    如果您已安装 Node.js 18 或更新版本，可以通过 npm 安装：
+
+    ```bash theme={null}
+    npm install -g @anthropic-ai/claude-code
+    ```
+
+    适用于所有操作系统。
+  </Tab>
+</Tabs>
+
+### 验证安装
+
+安装完成后，运行以下命令确认安装成功：
+
+```bash theme={null}
+claude --version
+```
+
+如果输出版本号（如 `1.x.x`），说明安装成功。
+
+## 第二步：配置 XCompute API
+
+以下提供三种配置方式，根据您的使用习惯任选其一。
+
+### 方式一：编辑 settings.json（推荐）
+
+这是最稳定的配置方式，配置一次即可长期生效。
+
+**1. 找到配置目录：**
+
+* Windows：按 `Win + R`，输入 `%userprofile%\.claude` 打开
+* macOS：按 `Command + Shift + G`，输入 `~/.claude` 打开
+* Linux：进入 `~/.claude` 目录
+
+<Note>如果目录不存在，先在终端运行一次 `claude` 再按 `Ctrl + C` 退出，会自动生成该目录。</Note>
+
+**2. 创建或编辑 `settings.json` 文件：**
+
+```json theme={null}
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://XCompute.us",
+    "ANTHROPIC_AUTH_TOKEN": "sk-xxxxxxxxxxxx",
+    "ANTHROPIC_MODEL": "claude-sonnet-4-6-apimart",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}
+```
+
+| 参数                                         | 说明                                          |
+| ------------------------------------------ | ------------------------------------------- |
+| `ANTHROPIC_BASE_URL`                       | XCompute API 地址，固定为 `https://XCompute.us` |
+| `ANTHROPIC_AUTH_TOKEN`                     | 您的 XCompute API 密钥（以 `sk-` 开头）               |
+| `ANTHROPIC_MODEL`                          | 默认使用的模型，可从下方模型列表中选择                         |
+| `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` | 设为 `1` 可减少非必要的网络请求                          |
+
+保存文件后，重新启动 Claude Code 即可生效。
+
+### 方式二：永久环境变量
+
+将配置写入系统环境，所有终端窗口都会自动加载。
+
+<Tabs>
+  <Tab title="macOS (zsh)">
+    ```bash theme={null}
+    echo 'export ANTHROPIC_BASE_URL="https://XCompute.us"' >> ~/.zshrc
+    echo 'export ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx"' >> ~/.zshrc
+    echo 'export ANTHROPIC_MODEL="claude-sonnet-4-6-apimart"' >> ~/.zshrc
+    source ~/.zshrc
+    ```
+  </Tab>
+
+  <Tab title="macOS / Linux (bash)">
+    ```bash theme={null}
+    echo 'export ANTHROPIC_BASE_URL="https://XCompute.us"' >> ~/.bashrc
+    echo 'export ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx"' >> ~/.bashrc
+    echo 'export ANTHROPIC_MODEL="claude-sonnet-4-6-apimart"' >> ~/.bashrc
+    source ~/.bashrc
+    ```
+  </Tab>
+
+  <Tab title="Windows">
+    **方式 A：图形界面设置**
+
+    1. 右键 "此电脑" → "属性" → "高级系统设置" → "环境变量"
+    2. 在 "用户变量" 中新建：
+       * `ANTHROPIC_BASE_URL` = `https://XCompute.us`
+       * `ANTHROPIC_API_KEY` = `sk-xxxxxxxxxxxx`
+       * `ANTHROPIC_MODEL` = `claude-sonnet-4-6-apimart`
+    3. 重启终端窗口
+
+    **方式 B：PowerShell 命令设置**
+
+    ```powershell theme={null}
+    [System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'https://XCompute.us', 'User')
+    [System.Environment]::SetEnvironmentVariable('ANTHROPIC_API_KEY', 'sk-xxxxxxxxxxxx', 'User')
+    [System.Environment]::SetEnvironmentVariable('ANTHROPIC_MODEL', 'claude-sonnet-4-6-apimart', 'User')
+    ```
+  </Tab>
+</Tabs>
+
+### 方式三：临时环境变量
+
+适合临时测试或短期使用，关闭终端后配置会失效。
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash theme={null}
+    export ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx"
+    export ANTHROPIC_MODEL="claude-sonnet-4-6-apimart"
+    export ANTHROPIC_BASE_URL="https://XCompute.us"
+    claude
+    ```
+  </Tab>
+
+  <Tab title="Windows (PowerShell)">
+    `powershell $env:ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx" $env:ANTHROPIC_MODEL="claude-sonnet-4-6-apimart" $env:ANTHROPIC_BASE_URL="https://XCompute.us" claude `
+  </Tab>
+
+  <Tab title="Windows (CMD)">
+    ```cmd theme={null}
+    set ANTHROPIC_API_KEY=sk-xxxxxxxxxxxx
+    set ANTHROPIC_MODEL=claude-sonnet-4-6-apimart
+    set ANTHROPIC_BASE_URL=https://XCompute.us
+    claude
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>临时环境变量仅在当前终端窗口有效，切换窗口或关闭终端后需重新设置。</Warning>
+
+## 第三步：开始使用
+
+### 验证配置
+
+启动 Claude Code 并发送一条简单消息来确认配置是否正确：
+
+```bash theme={null}
+claude "你好"
+```
+
+如果收到 AI 回复，说明配置成功。如果出现 `401`、`403` 等错误，请参考下方常见问题排查。
+
+### 使用方式
+
+Claude Code 提供两种交互模式：
+
+* **交互模式**：运行 `claude` 进入持续对话，适合复杂任务
+* **单次命令**：运行 `claude "你的问题"` 获取单次回复后退出，适合快速提问
+
+### 支持的模型
+
+XCompute 支持完整的 Claude 模型系列，您可以根据任务需求灵活切换：
+
+| 模型名称                         | 特点      | 推荐场景      |
+| ---------------------------- | ------- | --------- |
+| `claude-opus-4-6`            | 最强综合能力  | 复杂架构、疑难调试 |
+| `claude-sonnet-4-6`          | 性能与速度均衡 | 日常编程、代码生成 |
+| `claude-opus-4-5-20251101`   | 高级推理能力  | 复杂代码、深度分析 |
+| `claude-sonnet-4-5-20250929` | 优秀的代码能力 | 算法设计、代码优化 |
+| `claude-haiku-4-5-20251001`  | 极速响应    | 快速问答、代码片段 |
+
+以上模型均支持 Thinking（扩展思考）版本，在模型 ID 后加 `-thinking` 即可启用，如 `claude-opus-4-6-thinking`。扩展思考模式适合需要深度推理的复杂任务。
+
+#### XCompute 优惠模型
+
+XCompute 提供专属优惠版模型，**价格仅为官方的 20%**，能力与官方模型一致。只需在模型 ID 后加 `-apimart` 后缀即可使用：
+
+| 优惠模型名称                               | 特点      |
+| ------------------------------------ | ------- |
+| `claude-opus-4-6-apimart`            | 最强综合能力  |
+| `claude-sonnet-4-6-apimart`          | 性能与速度均衡 |
+| `claude-opus-4-5-20251101-apimart`   | 高级推理能力  |
+| `claude-sonnet-4-5-20250929-apimart` | 优秀的代码能力 |
+| `claude-haiku-4-5-20251001-apimart`  | 极速响应    |
+| `claude-haiku-4-5-20251001-apimart`  | 极速响应    |
+
+Thinking 版本同样支持，如 `claude-opus-4-6-thinking-apimart`、`claude-sonnet-4-6-thinking-apimart` 等。
+
+<Tip>
+  **模型选择建议：** - 💰 **高性价比：** `claude-sonnet-4-6-apimart` — 日常编程的最佳选择，价格仅为官方 20% - 🚀 **高性能：** `claude-opus-4-6-apimart` — 处理最复杂的代码和架构问题
+
+  * ⚡ **快速响应：** `claude-haiku-4-5-20251001-apimart` — 需要即时反馈时使用 - 🧠 **深度思考：** `claude-opus-4-6-thinking-apimart` — 需要深度推理时使用
+</Tip>
+
+如需切换模型，可以在交互模式中使用 `/model` 命令，或修改配置中的 `ANTHROPIC_MODEL` 字段后重启。
+
+### 常用命令
+
+以下是 Claude Code 中常用的命令和快捷操作：
+
+| 命令                 | 说明         |
+| ------------------ | ---------- |
+| `claude`           | 进入交互模式     |
+| `claude "问题"`      | 单次提问       |
+| `claude --version` | 查看版本号      |
+| `/model`           | 在交互模式中切换模型 |
+| `/help`            | 查看帮助信息     |
+| `Ctrl + C`         | 退出交互模式     |
+
+## 常见问题
+
+### Q1: 配置后仍然弹出登录选择页面？
+
+启动后仍然显示 "Select login method" 说明配置未生效。
+
+**排查步骤：**
+
+1. **使用 settings.json 方式**：检查文件路径是否正确
+   * Windows：`C:\Users\<用户名>\.claude\settings.json`
+   * macOS / Linux：`~/.claude/settings.json`
+2. **使用环境变量方式**：确认在设置变量的**同一终端窗口**中启动了 Claude Code
+3. **检查 JSON 格式**：确保括号、逗号、引号都正确（不要使用中文引号）
+
+### Q2: 出现 401 / 403 错误？
+
+| 错误码                | 含义          | 解决方案                                     |
+| ------------------ | ----------- | ---------------------------------------- |
+| `401 Unauthorized` | API 密钥缺失或无效 | 检查密钥是否正确，是否以 `sk-` 开头                    |
+| `403 Forbidden`    | 权限不足或密钥过期   | 前往 [控制台](https://XCompute.us/console/token) 确认密钥状态 |
+
+同时确保 `ANTHROPIC_BASE_URL` 设置为 `https://XCompute.us`，而非 Anthropic 官方地址。
+
+### Q3: 提示 "Unable to connect" 连接失败？
+
+这说明 Claude Code 未能连接到 API 服务。
+
+1. 检查网络连接是否正常
+2. 确认 `ANTHROPIC_BASE_URL` 配置正确
+3. 如果使用了代理，确保代理设置允许访问 `XCompute.us`
+
+### Q4: 提示 "Auth conflict" 认证冲突？
+
+如果启动时出现类似以下提示：
+
+```
+Auth conflict: Both a token (claude.ai) and an API key (ANTHROPIC_API_KEY) are set.
+```
+
+说明您同时登录了 claude.ai 账号并设置了 API Key，两者产生了冲突。
+
+**解决方案：** 在 Claude Code 交互模式中执行 `/logout` 登出 claude.ai 账号，只保留 API Key 配置即可。
+
+### Q5: 使用非 Claude 模型时报 max\_tokens 错误？
+
+如果看到类似以下错误：
+
+```
+max_tokens is too large: 32000. This model supports at most 16384 completion tokens.
+```
+
+这是因为 Claude Code 默认按 Claude 模型的参数发送请求（32000 tokens），而部分非 Claude 模型（如 `gpt-4o`）的最大 token 限制较低。
+
+**解决方案：** 切换为 Claude 系列模型（如 `claude-sonnet-4-5-20250929`），与 Claude Code 天然兼容，不会出现此问题。
+
+### Q6: 响应速度慢？
+
+1. 切换到更快的模型（如 `claude-haiku-4-5-20251001` 或 `claude-sonnet-4-6`）
+2. 缩短提问内容，减少上下文长度
+3. 检查本地网络状况
+
+### Q7: 如何切换模型？
+
+两种方式：
+
+1. **交互模式中**：输入 `/model` 命令即可切换
+2. **修改配置**：更改 `settings.json` 或环境变量中的 `ANTHROPIC_MODEL` 字段，重启 Claude Code
+
+### Q8: Claude Code 会自动读取本地文件吗？
+
+不会。Claude Code 需要您主动引用文件，且在执行敏感操作前会请求确认。建议在专用的项目目录中使用。
+
+### Q9: 如何让 Claude Code 分析本地文件？
+
+在交互模式中，您可以通过以下方式引用文件：
+
+* 直接输入文件路径
+* 将文件拖入终端窗口
+* 复制粘贴文件内容
+
+### Q10: 如何查看使用情况和费用？
+
+登录 [XCompute 控制台](https://XCompute.us/console) 查看：
+
+* API 调用统计
+* Token 消耗明细
+* 费用统计与趋势
+
+## 支持与帮助
+
+如果您在使用过程中遇到任何问题：
+
+* 📚 [XCompute 文档中心](https://XCompute.us)
+* 💬 [Discord 社区](https://discord.gg/V8zqssyZ5c)
+* 🐦 [XCompute 官网](https://XCompute.us)
+* 📧 技术支持：[support@xcompute.us](mailto:support@xcompute.us)
+
+***
+
+<Card title="开始使用 XCompute" icon="rocket" href="https://XCompute.us/console">
+  立即注册 XCompute，获取您的 API 密钥，在 Claude Code 中体验多模型编程助手！
+</Card>
+

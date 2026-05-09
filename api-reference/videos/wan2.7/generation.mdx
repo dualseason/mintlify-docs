@@ -1,0 +1,624 @@
+---
+title: "Wan2.7 视频生成"
+description: "- 阿里云万相 2.7 视频生成模型（统一入口）"
+---
+
+- 根据传参自动路由：文生视频 / 图生视频（首帧、首尾帧、视频续写）
+- 支持 720P/1080P 分辨率，2-15 秒时长
+- 支持自定义音频（文生模式作背景音乐，图生模式作驱动音频） 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://XCompute.us/v1/videos/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "wan2.7",
+      "prompt": "夕阳下的海边公路，慢镜头推进，电影感画面",
+      "resolution": "1080P",
+      "duration": 8,
+      "size": "16:9"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://XCompute.us/v1/videos/generations"
+
+  payload = {
+      "model": "wan2.7",
+      "prompt": "夕阳下的海边公路，慢镜头推进，电影感画面",
+      "resolution": "1080P",
+      "duration": 8,
+      "size": "16:9"
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://XCompute.us/v1/videos/generations";
+
+  const payload = {
+    model: "wan2.7",
+    prompt: "夕阳下的海边公路，慢镜头推进，电影感画面",
+    resolution: "1080P",
+    duration: 8,
+    size: "16:9"
+  };
+
+  const headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "application/json"
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+  ```
+
+  ```go Go theme={null}
+  package main
+
+  import (
+      "bytes"
+      "encoding/json"
+      "fmt"
+      "io/ioutil"
+      "net/http"
+  )
+
+  func main() {
+      url := "https://XCompute.us/v1/videos/generations"
+
+      payload := map[string]interface{}{
+          "model":      "wan2.7",
+          "prompt":     "夕阳下的海边公路，慢镜头推进，电影感画面",
+          "resolution": "1080P",
+          "duration":   8,
+          "size":       "16:9",
+      }
+
+      jsonData, _ := json.Marshal(payload)
+
+      req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+      req.Header.Set("Authorization", "Bearer <token>")
+      req.Header.Set("Content-Type", "application/json")
+
+      client := &http.Client{}
+      resp, err := client.Do(req)
+      if err != nil {
+          panic(err)
+      }
+      defer resp.Body.Close()
+
+      body, _ := ioutil.ReadAll(resp.Body)
+      fmt.Println(string(body))
+  }
+  ```
+
+  ```java Java theme={null}
+  import java.net.http.HttpClient;
+  import java.net.http.HttpRequest;
+  import java.net.http.HttpResponse;
+  import java.net.URI;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          String url = "https://XCompute.us/v1/videos/generations";
+
+          String payload = """
+          {
+            "model": "wan2.7",
+            "prompt": "夕阳下的海边公路，慢镜头推进，电影感画面",
+            "resolution": "1080P",
+            "duration": 8,
+            "size": "16:9"
+          }
+          """;
+
+          HttpClient client = HttpClient.newHttpClient();
+          HttpRequest request = HttpRequest.newBuilder()
+              .uri(URI.create(url))
+              .header("Authorization", "Bearer <token>")
+              .header("Content-Type", "application/json")
+              .POST(HttpRequest.BodyPublishers.ofString(payload))
+              .build();
+
+          HttpResponse<String> response = client.send(request,
+              HttpResponse.BodyHandlers.ofString());
+
+          System.out.println(response.body());
+      }
+  }
+  ```
+
+  ```php PHP theme={null}
+  <?php
+
+  $url = "https://XCompute.us/v1/videos/generations";
+
+  $payload = [
+      "model" => "wan2.7",
+      "prompt" => "夕阳下的海边公路，慢镜头推进，电影感画面",
+      "resolution" => "1080P",
+      "duration" => 8,
+      "size" => "16:9"
+  ];
+
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      "Authorization: Bearer <token>",
+      "Content-Type: application/json"
+  ]);
+
+  $response = curl_exec($ch);
+  curl_close($ch);
+
+  echo $response;
+  ?>
+  ```
+
+  ```ruby Ruby theme={null}
+  require 'net/http'
+  require 'json'
+  require 'uri'
+
+  url = URI("https://XCompute.us/v1/videos/generations")
+
+  payload = {
+    model: "wan2.7",
+    prompt: "夕阳下的海边公路，慢镜头推进，电影感画面",
+    resolution: "1080P",
+    duration: 8,
+    size: "16:9"
+  }
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+
+  request = Net::HTTP::Post.new(url)
+  request["Authorization"] = "Bearer <token>"
+  request["Content-Type"] = "application/json"
+  request.body = payload.to_json
+
+  response = http.request(request)
+  puts response.body
+  ```
+
+  ```swift Swift theme={null}
+  import Foundation
+
+  let url = URL(string: "https://XCompute.us/v1/videos/generations")!
+
+  let payload: [String: Any] = [
+      "model": "wan2.7",
+      "prompt": "夕阳下的海边公路，慢镜头推进，电影感画面",
+      "resolution": "1080P",
+      "duration": 8,
+      "size": "16:9"
+  ]
+
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  request.setValue("Bearer <token>", forHTTPHeaderField: "Authorization")
+  request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+  request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+
+  let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      if let error = error {
+          print("Error: \(error)")
+          return
+      }
+
+      if let data = data, let responseString = String(data: data, encoding: .utf8) {
+          print(responseString)
+      }
+  }
+
+  task.resume()
+  ```
+
+  ```csharp C# theme={null}
+  using System;
+  using System.Net.Http;
+  using System.Text;
+  using System.Threading.Tasks;
+
+  class Program
+  {
+      static async Task Main(string[] args)
+      {
+          var url = "https://XCompute.us/v1/videos/generations";
+
+          var payload = @"{
+              ""model"": ""wan2.7"",
+              ""prompt"": ""夕阳下的海边公路，慢镜头推进，电影感画面"",
+              ""resolution"": ""1080P"",
+              ""duration"": 8,
+              ""size"": ""16:9""
+          }";
+
+          using var client = new HttpClient();
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer <token>");
+
+          var content = new StringContent(payload, Encoding.UTF8, "application/json");
+          var response = await client.PostAsync(url, content);
+          var result = await response.Content.ReadAsStringAsync();
+
+          Console.WriteLine(result);
+      }
+  }
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": [
+      {
+        "status": "submitted",
+        "task_id": "task_01J9HA7JPQ9A0Z6JZ3V8M9W6PZ"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+
+  ```json 429 theme={null}
+  {
+    "error": {
+      "code": 429,
+      "message": "请求过于频繁，请稍后再试",
+      "type": "rate_limit_error"
+    }
+  }
+  ```
+
+  ```json 500 theme={null}
+  {
+    "error": {
+      "code": 500,
+      "message": "服务器内部错误，请稍后重试",
+      "type": "server_error"
+    }
+  }
+  ```
+</ResponseExample>
+
+## 认证
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用 Bearer Token 进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://XCompute.us/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## 模式路由
+
+`wan2.7` 是文生视频和图生视频的统一入口，后端根据传入参数自动判断模式，**两种模式计费完全一致**：
+
+| 条件                                                    | 路由到  | 模式说明               |
+| ----------------------------------------------------- | ---- | ------------------ |
+| `image_urls` / `image_with_roles` / `video_urls` 任一有值 | 图生视频 | 首帧生视频 / 首尾帧 / 视频续写 |
+| 以上参数均不传                                               | 文生视频 | 纯文字描述生成视频          |
+
+## 请求参数
+
+<ParamField body="model" type="string" required>
+  视频生成模型名称，固定为 `wan2.7`
+</ParamField>
+
+<ParamField body="prompt" type="string">
+  视频内容描述，最多 5000 字符
+
+  * **文生模式**（无图/视频时）：必填
+  * **图生模式**：可选，但建议填写以指导运镜和动作
+
+  示例：`"一只猫咪在草地上追逐蝴蝶，阳光明媚，慢动作"`
+</ParamField>
+
+<ParamField body="image_urls" type="array<string>">
+  图片 URL 数组。传入后自动进入图生模式
+
+  * **1 张**：首帧生视频
+  * **2 张**：首尾帧生视频（第 1 张首帧，第 2 张尾帧）
+
+  与 `image_with_roles` 二选一
+
+  <Warning>
+    不可与 `video_urls` 同时传入
+  </Warning>
+</ParamField>
+
+<ParamField body="image_with_roles" type="array<object>">
+  带角色的图片数组，与 `image_urls` 二选一，用于精确指定每张图片的角色
+
+  每个对象字段：
+
+  * `url` (string)：图片 URL（支持 http/https）
+  * `role` (string)：图片角色，`first_frame`（首帧）/ `last_frame`（尾帧），默认 `first_frame`
+
+  示例：
+
+  ```json theme={null}
+  [
+    { "url": "https://cdn.example.com/start.jpg", "role": "first_frame" },
+    { "url": "https://cdn.example.com/end.jpg", "role": "last_frame" }
+  ]
+  ```
+
+  <Warning>
+    含 `first_frame` 时不可与 `video_urls` 同时传入；仅含 `last_frame` 时可与 `video_urls` 搭配使用
+  </Warning>
+</ParamField>
+
+<ParamField body="video_urls" type="array<string>">
+  视频 URL 数组。传入后进入**视频续写**模式（仅取第 1 个视频）
+
+  <Warning>
+    不可与 `image_urls`、`first_frame`、`audio_url` 同时传入；可与 `last_frame` 搭配使用
+  </Warning>
+
+  <Note>
+    **视频限制：**
+
+    * 格式：mp4、mov
+    * 时长：2～10s
+    * 分辨率：宽和高的范围为 \[240, 4096] 像素
+    * 宽高比：1:8 \~ 8:1
+    * 文件大小：不超过 100MB
+  </Note>
+</ParamField>
+
+<ParamField body="negative_prompt" type="string">
+  反向提示词，描述不希望出现的内容，最多 500 字符
+
+  示例：`"模糊、变形、低质量"`
+</ParamField>
+
+<ParamField body="resolution" type="string" default="1080P">
+  视频分辨率
+
+  可选值：
+
+  * `720P` - 标清
+  * `1080P` - 高清（默认）
+</ParamField>
+
+<ParamField body="duration" type="integer" default="5">
+  视频时长（秒）
+
+  支持范围：`2` \~ `15` 秒
+
+  默认值：`5`
+</ParamField>
+
+<ParamField body="size" type="string" default="16:9">
+  画面宽高比，**仅文生模式生效**（无图/视频时）
+
+  支持的格式：
+
+  * `16:9` - 横版宽屏（默认）
+  * `9:16` - 竖版长屏
+  * `1:1` - 正方形
+  * `4:3` - 横版
+  * `3:4` - 竖版
+
+  <Warning>
+    图生模式下此参数会被忽略，宽高比由输入图片自动决定
+  </Warning>
+</ParamField>
+
+<ParamField body="audio_url" type="string">
+  自定义音频 URL
+
+  * **文生模式**：作为视频背景音乐
+  * **图生模式**：作为驱动音频，同步画面动作
+
+  格式：wav / mp3，时长 2-30 秒，文件大小 ≤ 15MB
+
+  <Warning>
+    不可与 `video_urls` 同时传入
+  </Warning>
+</ParamField>
+
+<ParamField body="prompt_extend" type="boolean" default="true">
+  是否开启 prompt 智能改写
+
+  对较短提示词效果提升明显，但会增加耗时
+
+  默认值：`true`
+</ParamField>
+
+<ParamField body="watermark" type="boolean" default="false">
+  是否在生成的视频上添加 "AI生成" 水印
+
+  * `true`：添加水印
+  * `false`：不添加水印（默认）
+</ParamField>
+
+<ParamField body="seed" type="integer">
+  种子整数，用于控制生成内容的随机性
+
+  取值范围：`≥0` 的整数
+
+  <Note>
+    * 相同的请求下，模型收到不同的 seed 值（如：不指定 seed 值），将生成不同的结果
+    * 相同的请求下，模型收到相同的 seed 值，会生成类似的结果，但不保证完全一致
+  </Note>
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，成功时为 200
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  返回数据数组
+
+  <Expandable title="数组元素">
+    <ResponseField name="status" type="string">
+      任务状态，初始提交时为 `submitted`
+    </ResponseField>
+
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符，用于查询任务状态和结果
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 使用场景
+
+### 场景 1：文生视频（最简请求）
+
+```json theme={null}
+{
+  "model": "wan2.7",
+  "prompt": "夕阳下的海边公路，慢镜头推进，电影感画面"
+}
+```
+
+### 场景 2：文生视频（完整参数）
+
+```json theme={null}
+{
+  "model": "wan2.7",
+  "prompt": "一只猫咪在草地上追逐蝴蝶，阳光明媚，慢动作",
+  "negative_prompt": "模糊、变形、低质量",
+  "resolution": "1080P",
+  "duration": 8,
+  "size": "16:9",
+  "audio_url": "https://cdn.example.com/bgm.mp3",
+  "prompt_extend": true,
+  "watermark": false,
+  "seed": 42
+}
+```
+
+### 场景 3：首帧生视频
+
+```json theme={null}
+{
+  "model": "wan2.7",
+  "prompt": "人物缓缓站起身，向镜头走来",
+  "image_urls": ["https://cdn.example.com/person.jpg"],
+  "resolution": "1080P",
+  "duration": 8
+}
+```
+
+### 场景 4：首尾帧生视频
+
+```json theme={null}
+{
+  "model": "wan2.7",
+  "prompt": "镜头从海边缓慢移向山顶",
+  "image_urls": [
+    "https://cdn.example.com/beach.jpg",
+    "https://cdn.example.com/mountain.jpg"
+  ],
+  "resolution": "1080P",
+  "duration": 10
+}
+```
+
+> 传 2 张时：第 1 张为首帧，第 2 张为尾帧。也可用 `image_with_roles` 精确指定。
+
+### 场景 5：视频续写
+
+```json theme={null}
+{
+  "model": "wan2.7",
+  "prompt": "继续向前走，镜头跟随",
+  "video_urls": ["https://cdn.example.com/clip.mp4"],
+  "resolution": "1080P",
+  "duration": 8
+}
+```
+
+### 场景 6：图片 + 驱动音频
+
+```json theme={null}
+{
+  "model": "wan2.7",
+  "prompt": "人物随音乐节奏运动",
+  "image_urls": ["https://cdn.example.com/dancer.jpg"],
+  "audio_url": "https://cdn.example.com/beat.mp3",
+  "resolution": "1080P",
+  "duration": 8
+}
+```
+
+## 模式选择建议
+
+| 需求           | 推荐方式                          |
+| ------------ | ----------------------------- |
+| 纯文字描述生成视频    | 仅传 `prompt`（不传图片/视频）          |
+| 让图片"动起来"     | 传 1 张图到 `image_urls`          |
+| 控制视频的开始和结束画面 | 传 2 张图到 `image_urls`（首帧 + 尾帧） |
+| 在已有视频基础上延伸   | 传视频到 `video_urls`             |
+| 让图片跟随音乐律动    | 传图片 + `audio_url`             |
+
+<Note>
+  **查询任务结果**
+
+  视频生成为异步任务，提交后会返回 `task_id`。使用 [获取任务状态](/api-reference/tasks/status) 接口查询生成进度和结果。
+</Note>
+

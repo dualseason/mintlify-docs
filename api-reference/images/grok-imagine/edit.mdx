@@ -1,0 +1,173 @@
+---
+title: "Grok Imagine 1.0 图像编辑"
+description: "- 异步处理模式，返回任务ID用于后续查询"
+---
+
+- 基于参考图进行高质量图像编辑，支持中英文描述
+- 生成的图像链接，有效期为24小时，请尽快保存 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://XCompute.us/v1/images/edits \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "grok-imagine-1.0-edit-apimart",
+      "prompt": "把背景改成星空，保留主体人物",
+      "image_urls": ["https://example.com/original.png"],
+      "n": 1
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://XCompute.us/v1/images/edits"
+
+  payload = {
+      "model": "grok-imagine-1.0-edit-apimart",
+      "prompt": "把背景改成星空，保留主体人物",
+      "image_urls": ["https://example.com/original.png"],
+      "n": 1
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://XCompute.us/v1/images/edits";
+
+  const payload = {
+    model: "grok-imagine-1.0-edit-apimart",
+    prompt: "把背景改成星空，保留主体人物",
+    image_urls: ["https://example.com/original.png"],
+    n: 1
+  };
+
+  const headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "application/json"
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": [
+      {
+        "status": "submitted",
+        "task_id": "task_01JNXXXXXXXXXXXXXXXXXX"
+      }
+    ]
+  }
+  ```
+</ResponseExample>
+
+## Authorizations
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用Bearer Token进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://XCompute.us/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## Body
+
+<ParamField body="model" type="string" default="grok-imagine-1.0-edit-apimart" required>
+  图像编辑模型名称
+
+  支持的模型：
+
+  * `grok-imagine-1.0-edit-apimart` - Grok 图像编辑
+
+  示例：`"grok-imagine-1.0-edit-apimart"`
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  图像编辑的文本描述，支持中英文
+</ParamField>
+
+<ParamField body="image_urls" type="string[]" required>
+  原始图片 URL 数组。系统将使用数组中的第一张图片作为编辑参考。
+
+  支持 `https://` 链接或 `data:image/...;base64,...` 格式。
+</ParamField>
+
+<ParamField body="n" type="integer" default={1}>
+  生成图像的数量
+
+  取值范围：1-10（最少 1 张，最多 10 张）
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  返回数据数组
+
+  <Expandable title="属性">
+    <ResponseField name="status" type="string">
+      任务状态
+
+      * `submitted` - 已提交
+    </ResponseField>
+
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 使用场景
+
+### 场景 1：图片背景编辑
+
+```json theme={null}
+{
+  "model": "grok-imagine-1.0-edit-apimart",
+  "prompt": "把背景改成星空，保留主体人物",
+  "image_urls": ["https://example.com/original.png"]
+}
+```
+
+### 场景 2：风格化编辑
+
+```json theme={null}
+{
+  "model": "grok-imagine-1.0-edit-apimart",
+  "prompt": "将图片转换为赛博朋克风格",
+  "image_urls": ["https://example.com/original.png"],
+  "n": 2
+}
+```
+

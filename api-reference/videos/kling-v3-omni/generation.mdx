@@ -1,0 +1,583 @@
+---
+title: "Kling v3 Omni 视频生成"
+description: "- 异步处理模式，返回任务ID用于后续查询"
+---
+
+- 统一文生视频/图生视频接口，支持图片引用语法
+- 支持标准模式（720P）和专业模式（1080P）
+- 通过 image_N 图片引用语法在提示词中引用图片
+- 支持生成有声视频（与 video_list 互斥） 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://XCompute.us/v1/videos/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "kling-v3-omni",
+      "prompt": "让<<<image_1>>>中的人物向镜头挥手",
+      "image_urls": ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+      "mode": "std",
+      "duration": 5,
+      "aspect_ratio": "16:9"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://XCompute.us/v1/videos/generations"
+
+  payload = {
+      "model": "kling-v3-omni",
+      "prompt": "让<<<image_1>>>中的人物向镜头挥手",
+      "image_urls": ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+      "mode": "std",
+      "duration": 5,
+      "aspect_ratio": "16:9"
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://XCompute.us/v1/videos/generations";
+
+  const payload = {
+    model: "kling-v3-omni",
+    prompt: "让<<<image_1>>>中的人物向镜头挥手",
+    image_urls: ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+    mode: "std",
+    duration: 5,
+    aspect_ratio: "16:9"
+  };
+
+  const headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "application/json"
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+  ```
+
+  ```go Go theme={null}
+  package main
+
+  import (
+      "bytes"
+      "encoding/json"
+      "fmt"
+      "io/ioutil"
+      "net/http"
+  )
+
+  func main() {
+      url := "https://XCompute.us/v1/videos/generations"
+
+      payload := map[string]interface{}{
+          "model":        "kling-v3-omni",
+          "prompt":       "让<<<image_1>>>中的人物向镜头挥手",
+          "image_urls":   []string{"https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"},
+          "mode":         "std",
+          "duration":     5,
+          "aspect_ratio": "16:9",
+      }
+
+      jsonData, _ := json.Marshal(payload)
+
+      req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+      req.Header.Set("Authorization", "Bearer <token>")
+      req.Header.Set("Content-Type", "application/json")
+
+      client := &http.Client{}
+      resp, err := client.Do(req)
+      if err != nil {
+          panic(err)
+      }
+      defer resp.Body.Close()
+
+      body, _ := ioutil.ReadAll(resp.Body)
+      fmt.Println(string(body))
+  }
+  ```
+
+  ```java Java theme={null}
+  import java.net.http.HttpClient;
+  import java.net.http.HttpRequest;
+  import java.net.http.HttpResponse;
+  import java.net.URI;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          String url = "https://XCompute.us/v1/videos/generations";
+
+          String payload = """
+          {
+            "model": "kling-v3-omni",
+            "prompt": "让<<<image_1>>>中的人物向镜头挥手",
+            "image_urls": ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+            "mode": "std",
+            "duration": 5,
+            "aspect_ratio": "16:9"
+          }
+          """;
+
+          HttpClient client = HttpClient.newHttpClient();
+          HttpRequest request = HttpRequest.newBuilder()
+              .uri(URI.create(url))
+              .header("Authorization", "Bearer <token>")
+              .header("Content-Type", "application/json")
+              .POST(HttpRequest.BodyPublishers.ofString(payload))
+              .build();
+
+          HttpResponse<String> response = client.send(request,
+              HttpResponse.BodyHandlers.ofString());
+
+          System.out.println(response.body());
+      }
+  }
+  ```
+
+  ```php PHP theme={null}
+  <?php
+
+  $url = "https://XCompute.us/v1/videos/generations";
+
+  $payload = [
+      "model" => "kling-v3-omni",
+      "prompt" => "让<<<image_1>>>中的人物向镜头挥手",
+      "image_urls" => ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+      "mode" => "std",
+      "duration" => 5,
+      "aspect_ratio" => "16:9"
+  ];
+
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      "Authorization: Bearer <token>",
+      "Content-Type: application/json"
+  ]);
+
+  $response = curl_exec($ch);
+  curl_close($ch);
+
+  echo $response;
+  ?>
+  ```
+
+  ```ruby Ruby theme={null}
+  require 'net/http'
+  require 'json'
+  require 'uri'
+
+  url = URI("https://XCompute.us/v1/videos/generations")
+
+  payload = {
+    model: "kling-v3-omni",
+    prompt: "让<<<image_1>>>中的人物向镜头挥手",
+    image_urls: ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+    mode: "std",
+    duration: 5,
+    aspect_ratio: "16:9"
+  }
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+
+  request = Net::HTTP::Post.new(url)
+  request["Authorization"] = "Bearer <token>"
+  request["Content-Type"] = "application/json"
+  request.body = payload.to_json
+
+  response = http.request(request)
+  puts response.body
+  ```
+
+  ```swift Swift theme={null}
+  import Foundation
+
+  let url = URL(string: "https://XCompute.us/v1/videos/generations")!
+
+  let payload: [String: Any] = [
+      "model": "kling-v3-omni",
+      "prompt": "让<<<image_1>>>中的人物向镜头挥手",
+      "image_urls": ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+      "mode": "std",
+      "duration": 5,
+      "aspect_ratio": "16:9"
+  ]
+
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  request.setValue("Bearer <token>", forHTTPHeaderField: "Authorization")
+  request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+  request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+
+  let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      if let error = error {
+          print("Error: \(error)")
+          return
+      }
+
+      if let data = data, let responseString = String(data: data, encoding: .utf8) {
+          print(responseString)
+      }
+  }
+
+  task.resume()
+  ```
+
+  ```csharp C# theme={null}
+  using System;
+  using System.Net.Http;
+  using System.Text;
+  using System.Threading.Tasks;
+
+  class Program
+  {
+      static async Task Main(string[] args)
+      {
+          var url = "https://XCompute.us/v1/videos/generations";
+
+          var payload = @"{
+              ""model"": ""kling-v3-omni"",
+              ""prompt"": ""让<<<image_1>>>中的人物向镜头挥手"",
+              ""image_urls"": [""https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp""],
+              ""mode"": ""std"",
+              ""duration"": 5,
+              ""aspect_ratio"": ""16:9""
+          }";
+
+          using var client = new HttpClient();
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer <token>");
+
+          var content = new StringContent(payload, Encoding.UTF8, "application/json");
+          var response = await client.PostAsync(url, content);
+          var result = await response.Content.ReadAsStringAsync();
+
+          Console.WriteLine(result);
+      }
+  }
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": [
+      {
+        "status": "submitted",
+        "task_id": "task_xxxxxxxxxx"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+
+  ```json 429 theme={null}
+  {
+    "error": {
+      "code": 429,
+      "message": "请求过于频繁，请稍后再试",
+      "type": "rate_limit_error"
+    }
+  }
+  ```
+
+  ```json 500 theme={null}
+  {
+    "error": {
+      "code": 500,
+      "message": "服务器内部错误，请稍后重试",
+      "type": "server_error"
+    }
+  }
+  ```
+</ResponseExample>
+
+## 认证
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用 Bearer Token 进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://XCompute.us/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## 请求参数
+
+<ParamField body="model" type="string" required>
+  视频生成模型名称
+
+  支持的模型：
+
+  * `kling-v3-omni` - 可灵 v3 Omni（统一接口）
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  正向文本提示词
+
+  支持通过 `<<<image_N>>>` 语法引用 `image_urls` 中的图片，`N` 从 1 开始。
+
+  示例：`"让<<<image_1>>>中的人物向镜头挥手"`
+
+  <Note>
+    如果传了图片但 prompt 中没有 `<<<image_N>>>` 引用，系统会自动在 prompt 前添加 `<<<image_1>>>`。
+  </Note>
+</ParamField>
+
+<ParamField body="mode" type="string" default="std">
+  生成模式
+
+  可选值：
+
+  * `std` - 标准模式（720P）
+  * `pro` - 专业模式（1080P）
+
+  默认值：`std`
+</ParamField>
+
+<ParamField body="duration" type="integer" default="5">
+  默认值：`5`
+  视频时长（秒）
+
+  取值范围：3-15（最短 3 秒，最长 15 秒）
+
+  **⚠️ 注意：** 必须输入纯数字（如 `6`），不要加引号，否则会报错
+</ParamField>
+
+<ParamField body="aspect_ratio" type="string" default="16:9">
+  视频宽高比
+
+  可选值：
+
+  * `16:9` - 横屏
+  * `9:16` - 竖屏
+  * `1:1` - 方形
+
+  默认值：`16:9`
+</ParamField>
+
+<ParamField body="image_urls" type="array<url>">
+  图片 URL 数组，用于图片引用
+
+  在 prompt 中通过 `<<<image_N>>>` 引用对应位置的图片（N 从 1 开始）
+
+  示例：`["https://example.com/photo.jpg"]`
+
+  <Warning>
+    * 图片 URL 必须公开可访问，不能有防盗链
+    * 图生视频时，`aspect_ratio` 可能被图片实际比例覆盖
+  </Warning>
+</ParamField>
+
+<ParamField body="video_list" type="array" optional>
+  参考视频列表（URL 方式），最多 1 段。
+
+  通过 `refer_type` 区分类型：
+
+  * `base`：待编辑视频（默认）
+  * `feature`：特征参考视频
+
+  通过 `keep_original_sound` 控制是否保留原声：
+
+  * `no`：不保留（默认）
+  * `yes`：保留原声
+
+  请求体格式：
+
+  ```json theme={null}
+  "video_list":[
+    { "video_url": "video_url", "refer_type": "base", "keep_original_sound": "no" }
+  ]
+  ```
+
+  <Warning>
+    * `video_url` 不能为空，且视频 URL 需可访问
+    * 当 `refer_type=base` 时:
+      * 不能定义视频首尾帧
+      * 参考视频需 3–10 秒
+      * 生成视频时长以上传视频为准
+    * 当 `refer_type=feature` 且 `video_url` 不为空时：
+      * image\_urls只可上传首帧图片
+    * 视频要求：仅支持 MP4/MOV；时长不少于 3 秒；分辨率 720px-2160px；帧率 24-60fps（输出为 24fps）；大小不超过 200MB
+  </Warning>
+</ParamField>
+
+<ParamField body="watermark" type="boolean">
+  是否添加水印
+</ParamField>
+
+<ParamField body="audio" type="boolean" default="false">
+  是否生成有声视频
+
+  <Warning>
+    此参数与 `video_list` 互相排斥。
+
+    当 `video_list` 有值时，不需要参数 `audio`。
+  </Warning>
+</ParamField>
+
+## 图片引用语法
+
+Omni 模型使用 `<<<image_N>>>` 语法在提示词中引用图片，实现统一的文生视频/图生视频体验：
+
+| 语法              | 说明                         |
+| --------------- | -------------------------- |
+| `<<<image_1>>>` | 引用 `image_urls` 数组中第 1 张图片 |
+| `<<<image_2>>>` | 引用 `image_urls` 数组中第 2 张图片 |
+
+<Note>
+  **自动引用**：如果传了 `image_urls` 但 prompt 中没有 `<<<image_N>>>` 引用，系统会自动在 prompt 前添加 `<<<image_1>>>`。
+</Note>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，成功时为 200
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  返回数据数组
+
+  <Expandable title="数组元素">
+    <ResponseField name="status" type="string">
+      任务状态，初始提交时为 `submitted`
+    </ResponseField>
+
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符，用于查询任务状态和结果
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 使用场景
+
+### 场景 1：文生视频（标准模式）
+
+```json theme={null}
+{
+  "model": "kling-v3-omni",
+  "prompt": "一只金毛犬在沙滩上奔跑，日落，电影质感",
+  "mode": "std",
+  "duration": 5,
+  "aspect_ratio": "16:9"
+}
+```
+
+### 场景 2：图片引用（单张图片）
+
+```json theme={null}
+{
+  "model": "kling-v3-omni",
+  "prompt": "让<<<image_1>>>中的人物向镜头挥手",
+  "image_urls": ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+  "mode": "pro",
+  "duration": 5
+}
+```
+
+### 场景 3：多图片引用
+
+```json theme={null}
+{
+  "model": "kling-v3-omni",
+  "prompt": "<<<image_1>>>中的角色走向<<<image_2>>>中的场景",
+  "image_urls": [
+    "https://example.com/character.jpg",
+    "https://example.com/scene.jpg"
+  ],
+  "mode": "pro",
+  "duration": 5
+}
+```
+
+### 场景 4：传图片但不显式引用（自动添加）
+
+```json theme={null}
+{
+  "model": "kling-v3-omni",
+  "prompt": "人物缓缓转头微笑",
+  "image_urls": ["https://upload.apimart.ai/f/models/9998230426123070-e9d6af04-cb5e-4731-8ae7-abf144cb0d29-9998230586368386-29641169-f698-4ab9-9b6d-380899e6521e-9998230593110693-c1741a3a-.webp"],
+  "mode": "std",
+  "duration": 5
+}
+```
+
+> 系统会自动在 prompt 前添加 `<<<image_1>>>`，等效于 `"<<<image_1>>>人物缓缓转头微笑"`。
+
+### 场景 5：生成有声视频
+
+```json theme={null}
+{
+  "model": "kling-v3-omni",
+  "prompt": "一只黄色的金丝雀在树枝上鸣叫",
+  "audio": true,
+  "mode": "std",
+  "duration": 5
+}
+```
+
+> **注意**：`audio` 与 `video_list` 互相排斥。当 `video_list` 有值时，不需要参数 `audio`。
+
+<Note>
+  **查询任务结果**
+
+  视频生成为异步任务，提交后会返回 `task_id`。使用 [获取任务状态](/api-reference/tasks/status) 接口查询生成进度和结果。
+</Note>
+

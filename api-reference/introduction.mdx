@@ -1,33 +1,66 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "API 参考"
+description: "浏览 XCompute 的 OpenAI 兼容接口，包括文本、图像、视频、音频、任务和账户相关能力。"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+XCompute 提供统一的 OpenAI 兼容接口。你可以直接替换 Base URL 为 `https://XCompute.us/v1`，继续使用现有 SDK 和调用方式。
 
-## Welcome
+## 核心端点
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+<CardGroup cols={2}>
+  <Card title="文本接口" icon="message" href="/api-reference/texts/general/chat-completions">
+    聊天补全、Claude Messages、OpenAI Responses 和 Gemini 原生格式。
+  </Card>
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+  <Card title="图像接口" icon="image" href="/api-reference/images/gpt-image-1/generation">
+    覆盖 GPT Image、Gemini、Seedream、Qwen、Wan 等图像模型。
+  </Card>
 
-## Authentication
+  <Card title="视频接口" icon="video" href="/api-reference/videos/veo3/generation">
+    提供 VEO、Sora、Kling、Wan、Vidu 等异步视频生成能力。
+  </Card>
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+  <Card title="音频接口" icon="volume" href="/api-reference/audios/tts">
+    支持文本转语音和 Whisper 语音转写。
+  </Card>
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+  <Card title="任务查询" icon="clock" href="/api-reference/tasks/status">
+    查询异步图像和视频任务状态，获取最终结果。
+  </Card>
+
+  <Card title="账户接口" icon="wallet" href="/api-reference/account/token-balance">
+    查看 API Key 余额和账户余额信息。
+  </Card>
+</CardGroup>
+
+## 使用方式
+
+1. 获取你的 API Key：`https://XCompute.us/console/token`
+2. 将 Base URL 设置为 `https://XCompute.us/v1`
+3. 选择目标模型并发起请求
+4. 对图像和视频接口使用任务查询接口轮询结果
+
+## 参考示例
+
+```python theme={null}
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://XCompute.us/v1",
+    api_key="your-apimart-key",
+)
+
+response = client.chat.completions.create(
+    model="gpt-5",
+    messages=[
+        {"role": "user", "content": "你好，介绍一下 XCompute"}
+    ],
+)
+
+print(response)
 ```
+
+<Note>
+  图像和视频接口大多是异步任务模式。提交后会返回 `task_id`，然后通过
+  [任务状态接口](/api-reference/tasks/status) 继续查询。
+</Note>

@@ -1,0 +1,562 @@
+---
+title: "wan2.7 图片生成与编辑"
+description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑）、交互式编辑、组图生成与多图参考"
+---
+
+- 异步处理模式，提交后返回 task_id，需轮询查询接口获取结果
+- 支持 1K / 2K / 4K 分辨率，`wan2.7-image-pro` 文生图最高支持 4K
+- 计费按成功生成的图片张数计算，与分辨率和宽高比无关 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://XCompute.us/v1/images/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "wan2.7-image-pro",
+      "prompt": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://XCompute.us/v1/images/generations"
+
+  payload = {
+      "model": "wan2.7-image-pro",
+      "prompt": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://XCompute.us/v1/images/generations";
+
+  const payload = {
+    model: "wan2.7-image-pro",
+    prompt: "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+  };
+
+  const headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "application/json"
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+  ```
+
+  ```go Go theme={null}
+  package main
+
+  import (
+      "bytes"
+      "encoding/json"
+      "fmt"
+      "io/ioutil"
+      "net/http"
+  )
+
+  func main() {
+      url := "https://XCompute.us/v1/images/generations"
+
+      payload := map[string]interface{}{
+          "model":  "wan2.7-image-pro",
+          "prompt": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵",
+      }
+
+      jsonData, _ := json.Marshal(payload)
+
+      req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+      req.Header.Set("Authorization", "Bearer <token>")
+      req.Header.Set("Content-Type", "application/json")
+
+      client := &http.Client{}
+      resp, err := client.Do(req)
+      if err != nil {
+          panic(err)
+      }
+      defer resp.Body.Close()
+
+      body, _ := ioutil.ReadAll(resp.Body)
+      fmt.Println(string(body))
+  }
+  ```
+
+  ```java Java theme={null}
+  import java.net.http.HttpClient;
+  import java.net.http.HttpRequest;
+  import java.net.http.HttpResponse;
+  import java.net.URI;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          String url = "https://XCompute.us/v1/images/generations";
+
+          String payload = """
+          {
+            "model": "wan2.7-image-pro",
+            "prompt": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+          }
+          """;
+
+          HttpClient client = HttpClient.newHttpClient();
+          HttpRequest request = HttpRequest.newBuilder()
+              .uri(URI.create(url))
+              .header("Authorization", "Bearer <token>")
+              .header("Content-Type", "application/json")
+              .POST(HttpRequest.BodyPublishers.ofString(payload))
+              .build();
+
+          HttpResponse<String> response = client.send(request,
+              HttpResponse.BodyHandlers.ofString());
+
+          System.out.println(response.body());
+      }
+  }
+  ```
+
+  ```php PHP theme={null}
+  <?php
+
+  $url = "https://XCompute.us/v1/images/generations";
+
+  $payload = [
+      "model" => "wan2.7-image-pro",
+      "prompt" => "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+  ];
+
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      "Authorization: Bearer <token>",
+      "Content-Type: application/json"
+  ]);
+
+  $response = curl_exec($ch);
+  curl_close($ch);
+
+  echo $response;
+  ?>
+  ```
+
+  ```ruby Ruby theme={null}
+  require 'net/http'
+  require 'json'
+  require 'uri'
+
+  url = URI("https://XCompute.us/v1/images/generations")
+
+  payload = {
+    model: "wan2.7-image-pro",
+    prompt: "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+  }
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+
+  request = Net::HTTP::Post.new(url)
+  request["Authorization"] = "Bearer <token>"
+  request["Content-Type"] = "application/json"
+  request.body = payload.to_json
+
+  response = http.request(request)
+  puts response.body
+  ```
+
+  ```swift Swift theme={null}
+  import Foundation
+
+  let url = URL(string: "https://XCompute.us/v1/images/generations")!
+
+  let payload: [String: Any] = [
+      "model": "wan2.7-image-pro",
+      "prompt": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+  ]
+
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  request.setValue("Bearer <token>", forHTTPHeaderField: "Authorization")
+  request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+  request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+
+  let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      if let error = error { print("Error: \(error)"); return }
+      if let data = data, let str = String(data: data, encoding: .utf8) { print(str) }
+  }
+  task.resume()
+  ```
+
+  ```csharp C# theme={null}
+  using System;
+  using System.Net.Http;
+  using System.Text;
+  using System.Threading.Tasks;
+
+  class Program
+  {
+      static async Task Main(string[] args)
+      {
+          var payload = @"{
+              ""model"": ""wan2.7-image-pro"",
+              ""prompt"": ""一间有着精致窗户的花店，漂亮的木质门，摆放着花朵""
+          }";
+
+          using var client = new HttpClient();
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer <token>");
+
+          var content = new StringContent(payload, Encoding.UTF8, "application/json");
+          var response = await client.PostAsync(
+              "https://XCompute.us/v1/images/generations", content);
+          Console.WriteLine(await response.Content.ReadAsStringAsync());
+      }
+  }
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": "success",
+    "message": "",
+    "data": [
+      {
+        "task_id": "task_01HX...",
+        "status": "processing"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+
+  ```json 429 theme={null}
+  {
+    "error": {
+      "code": 429,
+      "message": "请求过于频繁，请稍后再试",
+      "type": "rate_limit_error"
+    }
+  }
+  ```
+
+  ```json 500 theme={null}
+  {
+    "error": {
+      "code": 500,
+      "message": "服务器内部错误，请稍后重试",
+      "type": "server_error"
+    }
+  }
+  ```
+</ResponseExample>
+
+## Authorizations
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用 Bearer Token 进行认证
+
+  访问 [API Key 管理页面](https://XCompute.us/console/token) 获取您的 API Key，并在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## 可用模型
+
+| 模型名称               | 简介             | 文生图最高分辨率 | 图像编辑/组图最高分辨率 | 单价        |
+| ------------------ | -------------- | :------: | :----------: | --------- |
+| `wan2.7-image-pro` | 专业版，细节更好，支持 4K |    4K    |      2K      | ￥0.50 / 张 |
+| `wan2.7-image`     | 标准版，速度更快       |    2K    |      2K      | ￥0.20 / 张 |
+
+<Note>
+  计费按成功生成的图片张数 × 单价计算，输入不计费，与分辨率和宽高比无关。失败请求不扣费。
+</Note>
+
+## Body
+
+<ParamField body="model" type="string" required>
+  图像生成模型名称
+
+  可选值：
+
+  * `wan2.7-image-pro` — 专业版，文生图最高 4K
+  * `wan2.7-image` — 标准版，速度更快，最高 2K
+</ParamField>
+
+<ParamField body="prompt" type="string">
+  图像内容的文字描述，最长 5000 字符
+
+  * **文生图模式**（不传 `image_urls`）：必填
+  * **图像编辑模式**（传入 `image_urls`）：可选，建议填写以指导编辑效果
+
+  示例：`"一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"`
+</ParamField>
+
+<ParamField body="image_urls" type="array<string>">
+  输入图片 URL 数组，用于图像编辑、多图参考等场景
+
+  传入后自动进入**图像编辑模式**。
+
+  **支持格式：** HTTP / HTTPS 图片链接；`data:image/...;base64,...` Base64 格式
+
+  **限制：** 最多 9 张；格式 JPEG / PNG / WEBP / BMP；尺寸 240–8000 px，宽高比 1:8 \~ 8:1；单张 ≤ 20MB
+
+  <Note>
+    传入图片后，输出宽高比自动与**最后一张**输入图片保持一致。图像编辑模式最高支持 2K，不支持 4K。
+  </Note>
+</ParamField>
+
+<ParamField body="n" type="integer" default="1">
+  生成图像数量
+
+  * **非组图模式**：1–4（默认 1）
+  * **组图模式**（`enable_sequential: true`）：1–12（默认 1）
+
+  <Note>按成功生成的张数计费，会根据 `n` 进行预扣费。</Note>
+</ParamField>
+
+<ParamField body="size" type="string">
+  输出分辨率或宽高比，支持三种格式：
+
+  **① 档位关键字（推荐）：** `1K` / `2K`（默认）/ `4K`（仅 `wan2.7-image-pro` 文生图）
+
+  **② 宽高比：** `1:1` / `16:9` / `9:16` / `4:3` / `3:4` / `3:2` / `2:3`（默认按 2K 换算）
+
+  **③ 像素值：** `1024x1024` 或 `1024*1024`
+</ParamField>
+
+<ParamField body="resolution" type="string">
+  分辨率档位关键字：`1K` / `2K` / `4K`，可与 `size`（宽高比）配合使用。
+
+  | 模型                 | 场景        |       支持档位       | 像素范围                 |
+  | ------------------ | --------- | :--------------: | -------------------- |
+  | `wan2.7-image-pro` | 文生图（非组图）  | 1K / **2K** / 4K | 768×768 \~ 4096×4096 |
+  | `wan2.7-image-pro` | 图像编辑 / 组图 |    1K / **2K**   | 768×768 \~ 2048×2048 |
+  | `wan2.7-image`     | 所有场景      |    1K / **2K**   | 768×768 \~ 2048×2048 |
+</ParamField>
+
+<ParamField body="negative_prompt" type="string">
+  反向提示词，描述不希望出现在图片中的内容
+
+  示例：`"模糊、变形、低质量"`
+</ParamField>
+
+<ParamField body="watermark" type="boolean" default="false">
+  是否在图片右下角添加 "AI 生成" 水印
+</ParamField>
+
+<ParamField body="seed" type="integer">
+  随机种子，范围 0–2147483647。相同种子在相同参数下可生成风格近似稳定的结果。
+</ParamField>
+
+<ParamField body="thinking_mode" type="boolean" default="true">
+  是否开启思考模式。开启后模型增强推理能力，提升画面质量，但耗时增加。
+
+  <Note>仅在**非组图模式**且**无图片输入**时生效。</Note>
+</ParamField>
+
+<ParamField body="enable_sequential" type="boolean" default="false">
+  是否启用**组图模式**，一次生成多张内容连贯、风格一致的图片，适合连环画、分镜等场景。
+
+  * 开启后 `n` 上限为 12
+  * 组图模式下 `thinking_mode` 与 `color_palette` 不生效
+  * `wan2.7-image-pro` 组图模式最高 2K，不支持 4K
+</ParamField>
+
+<ParamField body="bbox_list" type="array">
+  交互式编辑框选区域，用于精确指定编辑或插入位置
+
+  **结构：** `[[[x1, y1, x2, y2], ...], ...]`
+
+  * 外层数组长度必须等于 `image_urls` 长度
+  * 无需框选的图片传 `[]` 占位
+  * 单张图片最多 2 个框；坐标为原图绝对像素值，左上角为 (0, 0)
+
+  示例：`[[], [[989, 515, 1138, 681]]]`
+</ParamField>
+
+<ParamField body="color_palette" type="array<object>">
+  自定义颜色主题，**仅非组图模式可用**
+
+  * 3–10 项，建议 8 项；每项包含 `hex`（颜色值）和 `ratio`（占比）
+  * 所有 `ratio` 之和必须等于 `100.00%`
+
+  ```json theme={null}
+  [
+    { "hex": "#C2D1E6", "ratio": "23.51%" },
+    { "hex": "#636574", "ratio": "76.49%" }
+  ]
+  ```
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="string">
+  响应状态，成功时为 `"success"`
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  <Expandable title="数组元素">
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符，用于查询生成结果
+    </ResponseField>
+
+    <ResponseField name="status" type="string">
+      任务初始状态，固定为 `processing`
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 示例
+
+### 文生图（最简请求）
+
+```json theme={null}
+{
+  "model": "wan2.7-image-pro",
+  "prompt": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+}
+```
+
+### 文生图（指定分辨率）
+
+```json theme={null}
+{
+  "model": "wan2.7-image-pro",
+  "prompt": "夏日海滩，蓝天白云，4K 高清",
+  "size": "4K",
+  "thinking_mode": true
+}
+```
+
+### 文生图（自定义颜色主题）
+
+```json theme={null}
+{
+  "model": "wan2.7-image-pro",
+  "prompt": "极简风格的现代客厅",
+  "size": "2K",
+  "color_palette": [
+    { "hex": "#C2D1E6", "ratio": "23.51%" },
+    { "hex": "#CDD8E9", "ratio": "20.13%" },
+    { "hex": "#B5C8DB", "ratio": "15.88%" },
+    { "hex": "#C0B5B4", "ratio": "13.27%" },
+    { "hex": "#DAE0EC", "ratio": "10.11%" },
+    { "hex": "#636574", "ratio": "8.93%" },
+    { "hex": "#CACAD2", "ratio": "5.55%" },
+    { "hex": "#CBD4E4", "ratio": "2.62%" }
+  ]
+}
+```
+
+### 组图生成
+
+```json theme={null}
+{
+  "model": "wan2.7-image-pro",
+  "prompt": "电影感组图：同一只流浪橘猫，前后特征必须一致。第一张春天樱花树下，第二张夏天老街树荫，第三张秋天落叶满地，第四张冬天雪地脚印。",
+  "enable_sequential": true,
+  "n": 4,
+  "size": "2K"
+}
+```
+
+### 单图编辑
+
+```json theme={null}
+{
+  "model": "wan2.7-image",
+  "prompt": "把背景换成日落场景，整体偏暖色调",
+  "image_urls": ["https://example.com/portrait.jpg"],
+  "size": "2K"
+}
+```
+
+### 多图参考 / 元素融合
+
+```json theme={null}
+{
+  "model": "wan2.7-image-pro",
+  "prompt": "把图2的涂鸦喷绘在图1的汽车上",
+  "image_urls": [
+    "https://example.com/car.webp",
+    "https://example.com/paint.webp"
+  ],
+  "size": "2K"
+}
+```
+
+### 交互式编辑（框选区域）
+
+通过 `bbox_list` 精确指定编辑位置，与 `image_urls` 一一对应，无需框选的图片传 `[]`。
+
+```json theme={null}
+{
+  "model": "wan2.7-image-pro",
+  "prompt": "把图1的闹钟放在图2的框选位置，保持场景和光线融合自然",
+  "image_urls": [
+    "https://example.com/clock.webp",
+    "https://example.com/desk.webp"
+  ],
+  "bbox_list": [
+    [],
+    [[989, 515, 1138, 681]]
+  ],
+  "size": "2K"
+}
+```
+
+<Note>
+  **查询任务结果**
+
+  图像生成为异步任务，提交后返回 `task_id`，请使用 [获取任务状态](/api-reference/tasks/status) 接口轮询直到 `status == completed`。
+</Note>
+
